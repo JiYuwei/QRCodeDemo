@@ -37,5 +37,7 @@
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string></string>
 </dict>
 </plist>

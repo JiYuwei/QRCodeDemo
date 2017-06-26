@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "JYQRScanController.h"
 
 @interface ViewController ()
 
@@ -18,8 +19,15 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"首页";
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"扫一扫" style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
 }
 
+- (void)openQRScanVC
+{
+    JYQRScanController *jyQRScanVC = [[JYQRScanController alloc] init];
+    [self.navigationController pushViewController:jyQRScanVC animated:YES];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
