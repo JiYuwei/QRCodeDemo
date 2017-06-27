@@ -85,7 +85,8 @@
     moveAnimation.duration = 2.5;
     moveAnimation.repeatCount = HUGE_VALF;
     moveAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    
+    moveAnimation.removedOnCompletion = NO;
+    moveAnimation.fillMode = kCAFillModeForwards;
     [_scanView.layer addAnimation:moveAnimation forKey:nil];
 }
 

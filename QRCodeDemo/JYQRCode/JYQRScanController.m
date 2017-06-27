@@ -9,8 +9,9 @@
 #import "JYQRScanController.h"
 #import "JYScanRectView.h"
 #import "JYQRCodeTool.h"
+#import "WebViewController.h"
 
-@interface JYQRScanController () <JYQRCodeDelegate,UIAlertViewDelegate>
+@interface JYQRScanController () <JYQRCodeDelegate>
 
 @property(nonatomic,strong)JYQRCodeTool *jyQRTool;
 
@@ -40,6 +41,7 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    [self.jyQRTool jy_resetScaning];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -127,15 +129,18 @@
 {
     _lightBtn.selected = NO;
     //对扫描获得的数据进行处理
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:outPutString message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:outPutString message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//    [alert show];
+    WebViewController *webVC = [[WebViewController alloc] init];
+    webVC.urlStr = outPutString;
+    [self.navigationController pushViewController:webVC animated:YES];
 }
 
 
--(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    [self.jyQRTool jy_resetScaning];
-}
+//-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+//{
+//    [self.jyQRTool jy_resetScaning];
+//}
 
 -(void)dealloc
 {

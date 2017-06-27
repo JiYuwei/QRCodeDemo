@@ -17,6 +17,7 @@
 		09EEE3E91F014559000152C0 /* JYScanRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3E81F014559000152C0 /* JYScanRectView.m */; };
 		09EEE3EB1F025A71000152C0 /* sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 09EEE3EA1F025A71000152C0 /* sound.wav */; };
 		09EEE3EF1F026453000152C0 /* JYQRCodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3EE1F026453000152C0 /* JYQRCodeTool.m */; };
+		09EEE3F31F028C5C000152C0 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3F21F028C5C000152C0 /* WebViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,8 @@
 		09EEE3EA1F025A71000152C0 /* sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = sound.wav; path = JYQRCode/sound.wav; sourceTree = "<group>"; };
 		09EEE3ED1F026453000152C0 /* JYQRCodeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYQRCodeTool.h; path = JYQRCode/JYQRCodeTool.h; sourceTree = "<group>"; };
 		09EEE3EE1F026453000152C0 /* JYQRCodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYQRCodeTool.m; path = JYQRCode/JYQRCodeTool.m; sourceTree = "<group>"; };
+		09EEE3F11F028C5C000152C0 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		09EEE3F21F028C5C000152C0 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +116,8 @@
 				09EEE3AE1F0107C5000152C0 /* AppDelegate.m */,
 				09EEE3B01F0107C5000152C0 /* ViewController.h */,
 				09EEE3B11F0107C5000152C0 /* ViewController.m */,
+				09EEE3F11F028C5C000152C0 /* WebViewController.h */,
+				09EEE3F21F028C5C000152C0 /* WebViewController.m */,
 				09EEE3B61F0107C5000152C0 /* Assets.xcassets */,
 				09EEE3BB1F0107C5000152C0 /* Info.plist */,
 				09EEE3AA1F0107C5000152C0 /* Supporting Files */,
@@ -312,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09EEE3B21F0107C5000152C0 /* ViewController.m in Sources */,
+				09EEE3F31F028C5C000152C0 /* WebViewController.m in Sources */,
 				09EEE3AF1F0107C5000152C0 /* AppDelegate.m in Sources */,
 				09EEE3E31F010DC0000152C0 /* JYQRScanController.m in Sources */,
 				09EEE3E91F014559000152C0 /* JYScanRectView.m in Sources */,
