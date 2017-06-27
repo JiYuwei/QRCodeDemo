@@ -7,23 +7,33 @@
 //
 
 #import "JYQRScanController.h"
-#import <AVFoundation/AVFoundation.h>
 #import "JYScanRectView.h"
+#import "JYQRCodeTool.h"
 
-@interface JYQRScanController () <AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate>
+@interface JYQRScanController () <JYQRCodeDelegate,UIAlertViewDelegate>
 
-@property(nonatomic,strong)AVCaptureDevice            *jyDevice;
-@property(nonatomic,strong)AVCaptureDeviceInput       *jyInput;
-@property(nonatomic,strong)AVCaptureMetadataOutput    *jyOutput;
-@property(nonatomic,strong)AVCaptureSession           *jySession;
-@property(nonatomic,strong)AVCaptureVideoPreviewLayer *jyPreview;
+@property(nonatomic,strong)JYQRCodeTool *jyQRTool;
 
 @property(nonatomic,strong)JYScanRectView *jyScanRectView;
+@property(nonatomic,strong)UILabel *scanLabel;
+@property(nonatomic,strong)UIButton *lightBtn;
 
 @end
 
 
 @implementation JYQRScanController
+
+//LazyLoad
+-(JYQRCodeTool *)jyQRTool
+{
+    if (!_jyQRTool) {
+        _jyQRTool = [JYQRCodeTool toolsWithBindingController:self];
+        _jyQRTool.scanVoiceName = @"sound.wav";
+        _jyQRTool.delegate = self;
+    }
+    
+    return _jyQRTool;
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -46,67 +56,61 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(openPhotoLibrary)];
     self.navigationItem.title = @"扫一扫";
     
-    
     CGSize cSize = [UIScreen mainScreen].bounds.size;
     
     CGSize scanSize = CGSizeMake(cSize.width * 3/4, cSize.width * 3/4);
     CGRect scanRect = CGRectMake((cSize.width - scanSize.width) / 2, (cSize.height - scanSize.height) / 2, scanSize.width, scanSize.height);
     
-    [self setCropRect:scanRect];
+    [self.jyQRTool jy_setUpCaptureWithRect:scanRect];
     
-    //计算rectOfInterest 注意x,y交换位置
-    CGRect rectOfInterest = CGRectMake(scanRect.origin.y/cSize.height, scanRect.origin.x/cSize.width, scanRect.size.height/cSize.height,scanRect.size.width/cSize.width);
-    
-    [self setUpCaptureWithRect:rectOfInterest];
     [self setUpRectViewWithRect:scanRect];
+    [self setUpLightButton];
 }
 
-- (void)setUpCaptureWithRect:(CGRect)rectOfInterest
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        _jyDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-        _jyInput = [AVCaptureDeviceInput deviceInputWithDevice:_jyDevice error:nil];
-        
-        _jyOutput = [[AVCaptureMetadataOutput alloc] init];
-        [_jyOutput setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-        
-        _jySession = [[AVCaptureSession alloc] init];
-        [_jySession setSessionPreset:([UIScreen mainScreen].bounds.size.height<500)?AVCaptureSessionPreset640x480:AVCaptureSessionPresetHigh];
-        [_jySession addInput:_jyInput];
-        [_jySession addOutput:_jyOutput];
-        
-        _jyOutput.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
-        _jyOutput.rectOfInterest = rectOfInterest;
-        
-        _jyPreview = [AVCaptureVideoPreviewLayer layerWithSession:_jySession];
-        _jyPreview.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        _jyPreview.frame = [[UIScreen mainScreen] bounds];
-        [self.view.layer insertSublayer:_jyPreview atIndex:0];
-        
-        [_jySession startRunning];
-    });
-}
 
+
+//创建扫描框
 -(void)setUpRectViewWithRect:(CGRect)scanRect
 {
     _jyScanRectView = [[JYScanRectView alloc] initWithFrame:scanRect];
     [self.view addSubview:_jyScanRectView];
+    
+    _scanLabel = [[UILabel alloc] initWithFrame:CGRectMake(_jyScanRectView.frame.origin.x, _jyScanRectView.frame.origin.y + _jyScanRectView.frame.size.height + 5, _jyScanRectView.frame.size.width, 30)];
+    _scanLabel.textColor = [UIColor grayColor];
+    _scanLabel.font = [UIFont systemFontOfSize:13];
+    _scanLabel.textAlignment = NSTextAlignmentCenter;
+    _scanLabel.text = @"将二维码/条码放入框内，即可自动扫描";
+    [self.view addSubview:_scanLabel];
 }
 
-- (void)setCropRect:(CGRect)cropRect{
+//创建闪光灯开关
+-(void)setUpLightButton
+{
+    CGFloat cWidth = [UIScreen mainScreen].bounds.size.width;
     
-    CAShapeLayer *cropLayer = [[CAShapeLayer alloc] init];
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, nil, cropRect);
-    CGPathAddRect(path, nil, self.view.bounds);
+    _lightBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    _lightBtn.frame = CGRectMake(cWidth / 2 - 50, _scanLabel.frame.origin.y + _scanLabel.frame.size.height + 20, 100, 30);
+//    _lightBtn.backgroundColor = [UIColor greenColor];
     
-    [cropLayer setFillRule:kCAFillRuleEvenOdd];
-    [cropLayer setPath:path];
-    [cropLayer setFillColor:[UIColor blackColor].CGColor];
-    [cropLayer setOpacity:0.6];
+//    [_lightBtn setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+//    [_lightBtn setImage:[UIImage imageNamed:@""] forState:UIControlStateSelected];
+    [_lightBtn setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+    [_lightBtn setTintColor:[UIColor greenColor]];
+    [_lightBtn setTitle:@"开启闪光灯" forState:UIControlStateNormal];
+    [_lightBtn setTitle:@"关闭闪光灯" forState:UIControlStateSelected];
     
-    [self.view.layer addSublayer:cropLayer];
+    [_lightBtn addTarget:self action:@selector(lightBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:_lightBtn];
 }
+
+-(void)lightBtnAction:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+    [self.jyQRTool jy_controlTheFlashLight:sender.selected];
+//    [self controlTheFlashLight:sender.selected];
+}
+
 
 
 -(void)openPhotoLibrary
@@ -115,27 +119,28 @@
 }
 
 
+
+
 #pragma mark - Delegate
 
--(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+-(void)jy_succeedOutputMataDataObjectToString:(NSString *)outPutString
 {
-    if (metadataObjects.count > 0) {
-        [_jySession stopRunning];
-        
-        AVMetadataMachineReadableCodeObject *readableObj = metadataObjects.firstObject;
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:readableObj.stringValue message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
+    _lightBtn.selected = NO;
+    //对扫描获得的数据进行处理
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:outPutString message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
 }
+
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    [_jySession startRunning];
+    [self.jyQRTool jy_resetScaning];
 }
 
-
-
+-(void)dealloc
+{
+    NSLog(@"dealloc");
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

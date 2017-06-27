@@ -55,7 +55,7 @@
         
         CAShapeLayer *shapeLayer = [CAShapeLayer layer];
         shapeLayer.lineWidth = 3.0;
-        shapeLayer.strokeColor = [UIColor whiteColor].CGColor;
+        shapeLayer.strokeColor = [UIColor greenColor].CGColor;
         shapeLayer.fillColor = [UIColor clearColor].CGColor;
         
         UIBezierPath *path = [UIBezierPath bezierPath];
@@ -77,10 +77,6 @@
     
     _scanView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cWidth, 2)];
     _scanView.backgroundColor = [UIColor greenColor];
-//    _scanView.layer.shadowColor = [UIColor greenColor].CGColor;
-//    _scanView.layer.shadowOffset = CGSizeMake(0, -1);
-//    _scanView.layer.shadowRadius = 3.0;
-//    _scanView.layer.shadowOpacity = 1;
     [self addSubview:_scanView];
     
     CABasicAnimation *moveAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
