@@ -144,7 +144,7 @@
 
 -(void)dealloc
 {
-    NSLog(@"dealloc");
+    NSLog(@"dealloc %@",NSStringFromClass([self class]));
 }
 
 - (void)didReceiveMemoryWarning {

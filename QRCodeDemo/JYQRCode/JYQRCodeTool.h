@@ -27,4 +27,8 @@
 
 -(void)jy_resetScaning;
 
+
++(UIImage *)jy_createQRCodeWithString:(NSString *)string size:(CGFloat)size;
++(UIImage *)jy_createQRCodeWithString:(NSString *)string size:(CGFloat)size colorWithRed:(CGFloat)red andGreen:(CGFloat)green andBlue:(CGFloat)blue;
+
 @end

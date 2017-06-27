@@ -8,10 +8,15 @@
 
 #import "ViewController.h"
 #import "JYQRScanController.h"
+#import "JYQRCodeTool.h"
 
-@interface ViewController ()
+#define BTN_BORDER_COLOR  [UIColor colorWithRed:0.2 green:0.49 blue:0.99 alpha:1]
 
-//@property(nonatomic,strong)UIView *scanView;
+@interface ViewController () <UIActionSheetDelegate>
+
+@property(nonatomic,strong)UIImageView *qrCodeView;
+@property(nonatomic,strong)UITextField *textField;
+@property(nonatomic,strong)UIButton *transBtn;
 
 @end
 
@@ -19,19 +24,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = @"首页";
+    self.view.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
+    self.navigationItem.title = @"生成二维码";
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"扫一扫" style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
     
-//    _scanView = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-//    _scanView.backgroundColor = [UIColor grayColor];
-////    _scanView.alpha = 0.6;
-//    _scanView.layer.shadowColor = [UIColor redColor].CGColor;
-//    _scanView.layer.shadowOffset = CGSizeMake(0, -5);
-//    _scanView.layer.shadowRadius = 5.0;
-//    _scanView.layer.shadowOpacity = 1;
-//    [self.view addSubview:_scanView];
+    [self createUI];
+    [self generateQRCode:nil];
 }
 
 - (void)openQRScanVC
@@ -39,6 +38,139 @@
     JYQRScanController *jyQRScanVC = [[JYQRScanController alloc] init];
     [self.navigationController pushViewController:jyQRScanVC animated:YES];
 }
+
+
+-(void)createUI
+{
+    CGFloat cWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat cHeight = [UIScreen mainScreen].bounds.size.height;
+    
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 84, cWidth-110, 35)];
+    _textField.borderStyle = UITextBorderStyleRoundedRect;
+    _textField.text = @"http://www.baidu.com";
+    [_textField addTarget:self action:@selector(textFieldDidChangeCharacters) forControlEvents:UIControlEventEditingChanged];
+    [self.view addSubview:_textField];
+    
+    _transBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    _transBtn.frame = CGRectMake(_textField.frame.origin.x + _textField.frame.size.width + 10, _textField.frame.origin.y, 60, 35);
+    _transBtn.layer.borderColor = BTN_BORDER_COLOR.CGColor;
+    _transBtn.layer.borderWidth = 0.5;
+    _transBtn.layer.cornerRadius = 5;
+    [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
+    _transBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+    [_transBtn addTarget:self action:@selector(generateQRCode:) forControlEvents:UIControlEventTouchUpInside];
+    _transBtn.enabled = NO;
+    [self.view addSubview:_transBtn];
+    
+    CGFloat vWidth = 250;
+    
+    _qrCodeView = [[UIImageView alloc] initWithFrame:CGRectMake((cWidth - vWidth) / 2, (cHeight - vWidth) / 2, vWidth, vWidth)];
+    _qrCodeView.backgroundColor = [UIColor whiteColor];
+    _qrCodeView.layer.borderColor = [UIColor grayColor].CGColor;
+    _qrCodeView.layer.borderWidth = 1.0;
+    _qrCodeView.userInteractionEnabled = YES;
+    [_qrCodeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(qrCodeAction)]];
+    [self.view addSubview:_qrCodeView];
+}
+
+-(void)generateQRCode:(UIButton *)sender
+{
+    if (_textField.text.length > 0) {
+        [self controlBtnsEnabled:NO];
+        _qrCodeView.image = [JYQRCodeTool jy_createQRCodeWithString:_textField.text size:_qrCodeView.bounds.size.width];
+    }
+}
+
+-(void)qrCodeAction
+{
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"识别图中二维码" otherButtonTitles:@"保存到相册", nil];
+    [sheet showInView:self.view];
+}
+
+-(void)readQRCode
+{
+    
+}
+
+-(void)savePhoto
+{
+    UIImageWriteToSavedPhotosAlbum(_qrCodeView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+}
+
+-(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    NSString *msg = nil ;
+    
+    if(error){
+        msg = @"保存失败" ;
+    }else{
+        msg = @"保存成功" ;
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:nil delegate:nil  cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+}
+
+
+-(void)textFieldDidChangeCharacters
+{
+    if (!_transBtn.isEnabled) {
+        [self controlBtnsEnabled:YES];
+    }
+    else if(_textField.text.length == 0){
+        [self controlBtnsEnabled:NO labelChanged:NO];
+    }
+}
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    if (_textField.isFirstResponder) {
+        [_textField resignFirstResponder];
+    }
+}
+
+
+
+-(void)controlBtnsEnabled:(BOOL)enable
+{
+    return [self controlBtnsEnabled:enable labelChanged:YES];
+}
+
+-(void)controlBtnsEnabled:(BOOL)enable labelChanged:(BOOL)change
+{
+    if (enable) {
+        if (change) {
+            [_transBtn setTitle:@"生成" forState:UIControlStateNormal];
+        }
+        _transBtn.enabled = YES;
+        _transBtn.layer.borderColor = BTN_BORDER_COLOR.CGColor;
+    }
+    else{
+        if (change) {
+            [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
+        }
+        _transBtn.enabled = NO;
+        _transBtn.layer.borderColor = [UIColor grayColor].CGColor;
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+            [self readQRCode];
+            break;
+        case 1:
+            [self savePhoto];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
