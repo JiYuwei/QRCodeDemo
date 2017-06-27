@@ -15,6 +15,7 @@
 		09EEE3D01F0107C5000152C0 /* QRCodeDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3CF1F0107C5000152C0 /* QRCodeDemoUITests.m */; };
 		09EEE3E31F010DC0000152C0 /* JYQRScanController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3E21F010DC0000152C0 /* JYQRScanController.m */; };
 		09EEE3E61F010E2B000152C0 /* JYQRGenerateController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3E51F010E2B000152C0 /* JYQRGenerateController.m */; };
+		09EEE3E91F014559000152C0 /* JYScanRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3E81F014559000152C0 /* JYScanRectView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		09EEE3E21F010DC0000152C0 /* JYQRScanController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYQRScanController.m; path = JYQRCode/JYQRScanController.m; sourceTree = "<group>"; };
 		09EEE3E41F010E2B000152C0 /* JYQRGenerateController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYQRGenerateController.h; path = JYQRCode/JYQRGenerateController.h; sourceTree = "<group>"; };
 		09EEE3E51F010E2B000152C0 /* JYQRGenerateController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYQRGenerateController.m; path = JYQRCode/JYQRGenerateController.m; sourceTree = "<group>"; };
+		09EEE3E71F014559000152C0 /* JYScanRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYScanRectView.h; path = JYQRCode/JYScanRectView.h; sourceTree = "<group>"; };
+		09EEE3E81F014559000152C0 /* JYScanRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYScanRectView.m; path = JYQRCode/JYScanRectView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +147,8 @@
 		09EEE3DD1F010BB1000152C0 /* JYQRCode */ = {
 			isa = PBXGroup;
 			children = (
+				09EEE3E71F014559000152C0 /* JYScanRectView.h */,
+				09EEE3E81F014559000152C0 /* JYScanRectView.m */,
 				09EEE3E11F010DC0000152C0 /* JYQRScanController.h */,
 				09EEE3E21F010DC0000152C0 /* JYQRScanController.m */,
 				09EEE3E41F010E2B000152C0 /* JYQRGenerateController.h */,
@@ -290,6 +295,7 @@
 				09EEE3B21F0107C5000152C0 /* ViewController.m in Sources */,
 				09EEE3AF1F0107C5000152C0 /* AppDelegate.m in Sources */,
 				09EEE3E31F010DC0000152C0 /* JYQRScanController.m in Sources */,
+				09EEE3E91F014559000152C0 /* JYScanRectView.m in Sources */,
 				09EEE3AC1F0107C5000152C0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

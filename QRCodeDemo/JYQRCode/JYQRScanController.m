@@ -8,6 +8,7 @@
 
 #import "JYQRScanController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "JYScanRectView.h"
 
 @interface JYQRScanController () <AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate>
 
@@ -17,61 +18,102 @@
 @property(nonatomic,strong)AVCaptureSession           *jySession;
 @property(nonatomic,strong)AVCaptureVideoPreviewLayer *jyPreview;
 
-@property(nonatomic,strong)UIView *jyScanRectView;
+@property(nonatomic,strong)JYScanRectView *jyScanRectView;
 
 @end
 
+
 @implementation JYQRScanController
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    
+    self.view.backgroundColor = [UIColor blackColor];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(openPhotoLibrary)];
     self.navigationItem.title = @"扫一扫";
     
-    [self setUpCapture];
-    [self setUpRectView];
-}
-
-- (void)setUpCapture
-{
-    _jyDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    _jyInput = [AVCaptureDeviceInput deviceInputWithDevice:_jyDevice error:nil];
     
-    _jyOutput = [[AVCaptureMetadataOutput alloc] init];
-    [_jyOutput setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-    
-    _jySession = [[AVCaptureSession alloc] init];
-    [_jySession setSessionPreset:([UIScreen mainScreen].bounds.size.height<500)?AVCaptureSessionPreset640x480:AVCaptureSessionPresetHigh];
-    [_jySession addInput:_jyInput];
-    [_jySession addOutput:_jyOutput];
-    
-    _jyOutput.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
-    _jyOutput.rectOfInterest = CGRectMake(50, 50, 200, 200);
-    
-    _jyPreview = [AVCaptureVideoPreviewLayer layerWithSession:_jySession];
-    _jyPreview.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    _jyPreview.frame = [[UIScreen mainScreen] bounds];
-    [self.view.layer insertSublayer:_jyPreview atIndex:0];
-    
-    [_jySession startRunning];
-}
-
--(void)setUpRectView
-{
     CGSize cSize = [UIScreen mainScreen].bounds.size;
     
     CGSize scanSize = CGSizeMake(cSize.width * 3/4, cSize.width * 3/4);
     CGRect scanRect = CGRectMake((cSize.width - scanSize.width) / 2, (cSize.height - scanSize.height) / 2, scanSize.width, scanSize.height);
     
+    [self setCropRect:scanRect];
+    
     //计算rectOfInterest 注意x,y交换位置
     CGRect rectOfInterest = CGRectMake(scanRect.origin.y/cSize.height, scanRect.origin.x/cSize.width, scanRect.size.height/cSize.height,scanRect.size.width/cSize.width);
-    _jyOutput.rectOfInterest = rectOfInterest;
     
-    _jyScanRectView = [[UIView alloc] initWithFrame:scanRect];
-    _jyScanRectView.layer.borderColor = [UIColor grayColor].CGColor;
-    _jyScanRectView.layer.borderWidth = 1.0;
+    [self setUpCaptureWithRect:rectOfInterest];
+    [self setUpRectViewWithRect:scanRect];
+}
+
+- (void)setUpCaptureWithRect:(CGRect)rectOfInterest
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _jyDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        _jyInput = [AVCaptureDeviceInput deviceInputWithDevice:_jyDevice error:nil];
+        
+        _jyOutput = [[AVCaptureMetadataOutput alloc] init];
+        [_jyOutput setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+        
+        _jySession = [[AVCaptureSession alloc] init];
+        [_jySession setSessionPreset:([UIScreen mainScreen].bounds.size.height<500)?AVCaptureSessionPreset640x480:AVCaptureSessionPresetHigh];
+        [_jySession addInput:_jyInput];
+        [_jySession addOutput:_jyOutput];
+        
+        _jyOutput.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
+        _jyOutput.rectOfInterest = rectOfInterest;
+        
+        _jyPreview = [AVCaptureVideoPreviewLayer layerWithSession:_jySession];
+        _jyPreview.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        _jyPreview.frame = [[UIScreen mainScreen] bounds];
+        [self.view.layer insertSublayer:_jyPreview atIndex:0];
+        
+        [_jySession startRunning];
+    });
+}
+
+-(void)setUpRectViewWithRect:(CGRect)scanRect
+{
+    _jyScanRectView = [[JYScanRectView alloc] initWithFrame:scanRect];
     [self.view addSubview:_jyScanRectView];
 }
+
+- (void)setCropRect:(CGRect)cropRect{
+    
+    CAShapeLayer *cropLayer = [[CAShapeLayer alloc] init];
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, nil, cropRect);
+    CGPathAddRect(path, nil, self.view.bounds);
+    
+    [cropLayer setFillRule:kCAFillRuleEvenOdd];
+    [cropLayer setPath:path];
+    [cropLayer setFillColor:[UIColor blackColor].CGColor];
+    [cropLayer setOpacity:0.6];
+    
+    [self.view.layer addSublayer:cropLayer];
+}
+
+
+-(void)openPhotoLibrary
+{
+    
+}
+
 
 #pragma mark - Delegate
 

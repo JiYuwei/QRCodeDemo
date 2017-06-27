@@ -11,6 +11,8 @@
 
 @interface ViewController ()
 
+//@property(nonatomic,strong)UIView *scanView;
+
 @end
 
 @implementation ViewController
@@ -19,8 +21,17 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"首页";
-    
+    self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"扫一扫" style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
+    
+//    _scanView = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+//    _scanView.backgroundColor = [UIColor grayColor];
+////    _scanView.alpha = 0.6;
+//    _scanView.layer.shadowColor = [UIColor redColor].CGColor;
+//    _scanView.layer.shadowOffset = CGSizeMake(0, -5);
+//    _scanView.layer.shadowRadius = 5.0;
+//    _scanView.layer.shadowOpacity = 1;
+//    [self.view addSubview:_scanView];
 }
 
 - (void)openQRScanVC
