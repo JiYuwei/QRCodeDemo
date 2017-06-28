@@ -389,7 +389,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     
     // 2.直接开始识别图片,获取图片特征
     CIImage *imageCI = [[CIImage alloc] initWithImage:sourceImage];
-    NSArray<CIFeature *> *features = [detector featuresInImage:imageCI];
+    NSArray <CIFeature *> *features = [detector featuresInImage:imageCI];
     
     // 3.读取特征
     CIFeature *feature = features.firstObject;

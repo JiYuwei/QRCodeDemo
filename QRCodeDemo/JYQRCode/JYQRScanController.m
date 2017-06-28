@@ -109,10 +109,17 @@
 
 -(void)openPhotoLibrary
 {
-    UIImagePickerController *pickerCtr = [[UIImagePickerController alloc] init];
-    pickerCtr.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    pickerCtr.delegate = self;
-    [self presentViewController:pickerCtr animated:YES completion:nil];
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"照片权限已关闭" message:@"请到设置->隐私->照片中，允许app访问相册" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    else{
+        UIImagePickerController *pickerCtr = [[UIImagePickerController alloc] init];
+        pickerCtr.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        pickerCtr.delegate = self;
+        [self presentViewController:pickerCtr animated:YES completion:nil];
+    }
 }
 
 -(void)lightBtnAction:(UIButton *)sender
