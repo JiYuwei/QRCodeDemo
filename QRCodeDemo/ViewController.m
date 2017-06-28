@@ -39,12 +39,7 @@
     [self generateQRCode];
 }
 
-- (void)openQRScanVC
-{
-    JYQRScanController *jyQRScanVC = [[JYQRScanController alloc] init];
-    [self.navigationController pushViewController:jyQRScanVC animated:YES];
-}
-
+#pragma mark - CustomUI
 
 -(void)createUI
 {
@@ -117,11 +112,6 @@
     [self.view addSubview:_logoSwitch];
 }
 
--(void)switchChanged
-{
-    [self controlBtnsEnabled:YES];
-}
-
 -(void)createColorTextField:(UITextField *)colorField rect:(CGRect)rect placeHolder:(NSString *)placeHolder
 {
     colorField.frame = rect;
@@ -130,6 +120,103 @@
     colorField.keyboardType = UIKeyboardTypeNumberPad;
     [colorField addTarget:self action:@selector(textFieldDidChangeCharacters:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:colorField];
+}
+
+#pragma mark - ReadQRCode
+
+-(void)readQRCode
+{
+    NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:_qrCodeView.image];
+    NSLog(@"%@",urlStr);
+    
+    //对识别出的数据进行处理
+    if (urlStr) {
+        WebViewController *webVC = [[WebViewController alloc] init];
+        webVC.urlStr = urlStr;
+        [self.navigationController pushViewController:webVC animated:YES];
+    }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+#pragma mark - SavePhoto
+
+-(void)savePhoto
+{
+    UIImageWriteToSavedPhotosAlbum(_qrCodeView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+}
+
+-(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    NSString *msg = nil ;
+    
+    if(error){
+        msg = @"保存失败" ;
+    }else{
+        msg = @"保存成功" ;
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:nil delegate:nil  cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+}
+
+
+#pragma mark - ButtonEnableControl
+
+-(void)controlBtnsEnabled:(BOOL)enable
+{
+    return [self controlBtnsEnabled:enable labelChanged:YES];
+}
+
+-(void)controlBtnsEnabled:(BOOL)enable labelChanged:(BOOL)change
+{
+    if (enable) {
+        if (!_transBtn.isEnabled) {
+            if (change) {
+                [_transBtn setTitle:@"生成" forState:UIControlStateNormal];
+            }
+            _transBtn.enabled = YES;
+            _transBtn.layer.borderColor = BTN_BORDER_COLOR.CGColor;
+        }
+    }
+    else{
+        if (_transBtn.isEnabled) {
+            if (change) {
+                [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
+            }
+            _transBtn.enabled = NO;
+            _transBtn.layer.borderColor = [UIColor grayColor].CGColor;
+        }
+    }
+}
+
+
+#pragma mark - Actions
+
+- (void)openQRScanVC
+{
+    JYQRScanController *jyQRScanVC = [[JYQRScanController alloc] init];
+    [self.navigationController pushViewController:jyQRScanVC animated:YES];
+}
+
+-(void)textFieldDidChangeCharacters:(UITextField *)textField
+{
+    if (textField == _textField) {
+        if(_textField.text.length == 0){
+            [self controlBtnsEnabled:NO labelChanged:NO];
+        }
+        else{
+            [self controlBtnsEnabled:YES];
+        }
+    }
+    else{
+        if ([textField.text integerValue] > 255) {
+            textField.text = @"255";
+        }
+        
+        [self controlBtnsEnabled:YES];
+    }
 }
 
 //生成二维码
@@ -169,98 +256,11 @@
     [sheet showInView:self.view];
 }
 
--(void)readQRCode
+-(void)switchChanged
 {
-    NSArray *array = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:_qrCodeView.image];
-    NSLog(@"%@",array);
-    NSString *urlStr = array.firstObject;
-    //对识别出的数据进行处理
-    if (urlStr) {
-        WebViewController *webVC = [[WebViewController alloc] init];
-        webVC.urlStr = urlStr;
-        [self.navigationController pushViewController:webVC animated:YES];
-    }
-    else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
+    [self controlBtnsEnabled:YES];
 }
 
--(void)savePhoto
-{
-    UIImageWriteToSavedPhotosAlbum(_qrCodeView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
-}
-
--(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
-{
-    NSString *msg = nil ;
-    
-    if(error){
-        msg = @"保存失败" ;
-    }else{
-        msg = @"保存成功" ;
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:msg message:nil delegate:nil  cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
-}
-
-
--(void)textFieldDidChangeCharacters:(UITextField *)textField
-{
-    if (textField == _textField) {
-        if(_textField.text.length == 0){
-            [self controlBtnsEnabled:NO labelChanged:NO];
-        }
-        else{
-            [self controlBtnsEnabled:YES];
-        }
-    }
-    else{
-        if ([textField.text integerValue] > 255) {
-            textField.text = @"255";
-        }
-        
-        [self controlBtnsEnabled:YES];
-    }
-}
-
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    for (UITextField *field in self.view.subviews) {
-        if (field.isFirstResponder) {
-            [field resignFirstResponder];
-            return;
-        }
-    }
-}
-
-
--(void)controlBtnsEnabled:(BOOL)enable
-{
-    return [self controlBtnsEnabled:enable labelChanged:YES];
-}
-
--(void)controlBtnsEnabled:(BOOL)enable labelChanged:(BOOL)change
-{
-    if (enable) {
-        if (!_transBtn.isEnabled) {
-            if (change) {
-                [_transBtn setTitle:@"生成" forState:UIControlStateNormal];
-            }
-            _transBtn.enabled = YES;
-            _transBtn.layer.borderColor = BTN_BORDER_COLOR.CGColor;
-        }
-    }
-    else{
-        if (_transBtn.isEnabled) {
-            if (change) {
-                [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
-            }
-            _transBtn.enabled = NO;
-            _transBtn.layer.borderColor = [UIColor grayColor].CGColor;
-        }
-    }
-}
 
 #pragma mark - UIActionSheetDelegate
 
@@ -280,6 +280,20 @@
 }
 
 
+#pragma mark - TouchEvent
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    for (UITextField *field in self.view.subviews) {
+        if (field.isFirstResponder) {
+            [field resignFirstResponder];
+            return;
+        }
+    }
+}
+
+
+#pragma mark - MemoryWarning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

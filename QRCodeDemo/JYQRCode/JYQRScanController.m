@@ -70,6 +70,7 @@
 }
 
 
+#pragma mark - CustomUI
 
 //创建扫描框
 -(void)setUpRectViewWithRect:(CGRect)scanRect
@@ -103,12 +104,7 @@
     [self.view addSubview:_lightBtn];
 }
 
--(void)lightBtnAction:(UIButton *)sender
-{
-    sender.selected = !sender.selected;
-    [self.jyQRTool jy_controlTheFlashLight:sender.selected];
-}
-
+#pragma mark - Actions
 
 -(void)openPhotoLibrary
 {
@@ -118,6 +114,11 @@
     [self presentViewController:pickerCtr animated:YES completion:nil];
 }
 
+-(void)lightBtnAction:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+    [self.jyQRTool jy_controlTheFlashLight:sender.selected];
+}
 
 -(void)visitWebViewWithUrl:(NSString *)url
 {
@@ -141,8 +142,7 @@
     [picker dismissViewControllerAnimated:YES completion:^{
         UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
         //对获得的数据进行处理
-        NSArray *dataArr = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:pickImage];
-        NSString *urlStr = dataArr.firstObject;
+        NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:pickImage];
         
         if (urlStr) {
             [self visitWebViewWithUrl:urlStr];
@@ -160,11 +160,14 @@
 }
 
 
+#pragma mark - Dealloc
 
 -(void)dealloc
 {
     NSLog(@"dealloc %@",NSStringFromClass([self class]));
 }
+
+#pragma mark - MemoryWarning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

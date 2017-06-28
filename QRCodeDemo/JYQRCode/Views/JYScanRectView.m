@@ -29,6 +29,9 @@
     return self;
 }
 
+#pragma mark - CustomUI
+
+//添加四角标识
 -(void)customScanCorners
 {
     CGFloat cWidth = self.bounds.size.width;
@@ -70,6 +73,7 @@
     
 }
 
+//添加扫描线
 -(void)customScanLine
 {
     CGFloat cWidth = self.bounds.size.width;

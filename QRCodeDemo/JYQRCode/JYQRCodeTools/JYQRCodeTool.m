@@ -112,7 +112,7 @@
     return [self imagewithQRImage:qrImage addAvatarImage:avatarImage ofTheSize:qrImage.size];
 }
 
-+(NSArray *)jy_detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage
++(NSString *)jy_detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage
 {
     return [self detectorQRCodeImageWithSourceImage:sourceImage];
 }
@@ -373,7 +373,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     return radiusImage;
 }
 
-+ (NSArray *)detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage
++ (NSString *)detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage
 {
     // 0.创建上下文
     CIContext *context = [[CIContext alloc] init];
@@ -385,14 +385,16 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     NSArray<CIFeature *> *features = [detector featuresInImage:imageCI];
     
     // 3.读取特征
-    NSMutableArray *resultArray = [NSMutableArray array];
-    for (CIFeature *feature in features) {
+    CIFeature *feature = features.firstObject;
+    NSString *msgString = nil;
+    
+    if ([feature isKindOfClass:[CIQRCodeFeature class]]) {
         CIQRCodeFeature *tempFeature = (CIQRCodeFeature *)feature;
-        [resultArray addObject:tempFeature.messageString];
+        msgString = tempFeature.messageString;
     }
     
     // 4.传递数据给外界
-    return resultArray;
+    return msgString;
 }
 
 #pragma mark - Delegate

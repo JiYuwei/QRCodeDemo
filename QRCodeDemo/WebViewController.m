@@ -45,12 +45,7 @@
     NSLog(@"error: %@",error);
 }
 
-
-
-
-
-
-
+#pragma mark - MemoryWarning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
