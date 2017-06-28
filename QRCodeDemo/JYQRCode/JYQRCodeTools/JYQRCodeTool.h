@@ -32,4 +32,6 @@
 + (UIImage *)jy_customQRCodeWithImage:(UIImage *)qrImage colorWithRed:(CGFloat)red andGreen:(CGFloat)green andBlue:(CGFloat)blue;
 + (UIImage *)jy_customQRCodeWithImage:(UIImage *)qrImage addAvatarImage:(UIImage *)avatarImage;
 
++ (NSArray *)jy_detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage;
+
 @end

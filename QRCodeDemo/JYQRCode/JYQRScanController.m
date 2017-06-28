@@ -11,7 +11,7 @@
 #import "JYQRCodeTool.h"
 #import "WebViewController.h"
 
-@interface JYQRScanController () <JYQRCodeDelegate>
+@interface JYQRScanController () <JYQRCodeDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property(nonatomic,strong)JYQRCodeTool *jyQRTool;
 
@@ -112,9 +112,19 @@
 
 -(void)openPhotoLibrary
 {
-    
+    UIImagePickerController *pickerCtr = [[UIImagePickerController alloc] init];
+    pickerCtr.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    pickerCtr.delegate = self;
+    [self presentViewController:pickerCtr animated:YES completion:nil];
 }
 
+
+-(void)visitWebViewWithUrl:(NSString *)url
+{
+    WebViewController *webVC = [[WebViewController alloc] init];
+    webVC.urlStr = url;
+    [self.navigationController pushViewController:webVC animated:YES];
+}
 
 #pragma mark - Delegate
 
@@ -123,10 +133,32 @@
     _lightBtn.selected = NO;
     
     //对扫描获得的数据进行处理
-    WebViewController *webVC = [[WebViewController alloc] init];
-    webVC.urlStr = outPutString;
-    [self.navigationController pushViewController:webVC animated:YES];
+    [self visitWebViewWithUrl:outPutString];
 }
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+    [picker dismissViewControllerAnimated:YES completion:^{
+        UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+        //对获得的数据进行处理
+        NSArray *dataArr = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:pickImage];
+        NSString *urlStr = dataArr.firstObject;
+        
+        if (urlStr) {
+            [self visitWebViewWithUrl:urlStr];
+        }
+        else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+        }
+    }];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 
 -(void)dealloc

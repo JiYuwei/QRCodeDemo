@@ -112,6 +112,11 @@
     return [self imagewithQRImage:qrImage addAvatarImage:avatarImage ofTheSize:qrImage.size];
 }
 
++(NSArray *)jy_detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage
+{
+    return [self detectorQRCodeImageWithSourceImage:sourceImage];
+}
+
 #pragma mark - Private
 
 //添加遮罩
@@ -368,6 +373,27 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     return radiusImage;
 }
 
++ (NSArray *)detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage
+{
+    // 0.创建上下文
+    CIContext *context = [[CIContext alloc] init];
+    // 1.创建一个探测器
+    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:context options:@{CIDetectorAccuracy: CIDetectorAccuracyLow}];
+    
+    // 2.直接开始识别图片,获取图片特征
+    CIImage *imageCI = [[CIImage alloc] initWithImage:sourceImage];
+    NSArray<CIFeature *> *features = [detector featuresInImage:imageCI];
+    
+    // 3.读取特征
+    NSMutableArray *resultArray = [NSMutableArray array];
+    for (CIFeature *feature in features) {
+        CIQRCodeFeature *tempFeature = (CIQRCodeFeature *)feature;
+        [resultArray addObject:tempFeature.messageString];
+    }
+    
+    // 4.传递数据给外界
+    return resultArray;
+}
 
 #pragma mark - Delegate
 

@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "WebViewController.h"
 #import "JYQRScanController.h"
 #import "JYQRCodeTool.h"
 
@@ -73,6 +74,9 @@
     _qrCodeView.backgroundColor = [UIColor whiteColor];
     _qrCodeView.layer.borderColor = [UIColor grayColor].CGColor;
     _qrCodeView.layer.borderWidth = 1.0;
+    _qrCodeView.layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    _qrCodeView.layer.shadowOpacity = 1.0;
+    _qrCodeView.layer.shadowOffset = CGSizeMake(0, 0);
     _qrCodeView.userInteractionEnabled = YES;
     [_qrCodeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(qrCodeAction)]];
     [self.view addSubview:_qrCodeView];
@@ -167,7 +171,19 @@
 
 -(void)readQRCode
 {
-    
+    NSArray *array = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:_qrCodeView.image];
+    NSLog(@"%@",array);
+    NSString *urlStr = array.firstObject;
+    //对识别出的数据进行处理
+    if (urlStr) {
+        WebViewController *webVC = [[WebViewController alloc] init];
+        webVC.urlStr = urlStr;
+        [self.navigationController pushViewController:webVC animated:YES];
+    }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 -(void)savePhoto
