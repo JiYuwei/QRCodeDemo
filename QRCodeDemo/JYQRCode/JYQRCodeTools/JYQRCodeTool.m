@@ -90,10 +90,17 @@
     }
 }
 
-- (void)jy_resetScaning;
+- (void)jy_startScaning;
 {
     if (_jySession && !_jySession.isRunning) {
         [_jySession startRunning];
+    }
+}
+
+-(void)jy_stopScaning
+{
+    if (_jySession && _jySession.isRunning) {
+        [_jySession stopRunning];
     }
 }
 

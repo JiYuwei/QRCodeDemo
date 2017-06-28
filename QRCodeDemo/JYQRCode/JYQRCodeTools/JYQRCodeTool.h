@@ -55,9 +55,15 @@
 
 
 /**
- * 重置扫描功能为可用
+ * 启用扫描功能
  **/
-- (void)jy_resetScaning;
+- (void)jy_startScaning;
+
+
+/**
+ * 禁用扫描功能
+ **/
+- (void)jy_stopScaning;
 
 
 #pragma mark - GenerateQRCode

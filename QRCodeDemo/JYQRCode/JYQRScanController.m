@@ -11,7 +11,7 @@
 #import "JYQRCodeTool.h"
 #import "WebViewController.h"
 
-@interface JYQRScanController () <JYQRCodeDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface JYQRScanController () <JYQRCodeDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate>
 
 @property(nonatomic,strong)JYQRCodeTool *jyQRTool;
 
@@ -41,7 +41,7 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    [self.jyQRTool jy_resetScaning];
+    [self.jyQRTool jy_startScaning];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -132,7 +132,7 @@
 -(void)jy_succeedOutputMataDataObjectToString:(NSString *)outPutString
 {
     _lightBtn.selected = NO;
-    
+    [self.jyQRTool jy_stopScaning];
     //对扫描获得的数据进行处理
     [self visitWebViewWithUrl:outPutString];
 }
@@ -140,6 +140,8 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     [picker dismissViewControllerAnimated:YES completion:^{
+        _lightBtn.selected = NO;
+        [self.jyQRTool jy_stopScaning];
         UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
         //对获得的数据进行处理
         NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:pickImage];
@@ -148,7 +150,7 @@
             [self visitWebViewWithUrl:urlStr];
         }
         else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
     }];
@@ -157,6 +159,11 @@
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    [self.jyQRTool jy_startScaning];
 }
 
 
