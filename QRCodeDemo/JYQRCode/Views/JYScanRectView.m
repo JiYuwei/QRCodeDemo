@@ -77,23 +77,60 @@
 -(void)customScanLine
 {
     CGFloat cWidth = self.bounds.size.width;
-    CGFloat cHeight = self.bounds.size.height;
     
     _scanView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cWidth, 2)];
     _scanView.backgroundColor = [UIColor greenColor];
+    _scanView.alpha = 0.0;
+    
     [self addSubview:_scanView];
     
-    CABasicAnimation *moveAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
-    moveAnimation.fromValue = @0;
-    moveAnimation.toValue = [NSNumber numberWithFloat:cHeight - 2];
-    moveAnimation.duration = 2.5;
-    moveAnimation.repeatCount = HUGE_VALF;
-    moveAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    moveAnimation.removedOnCompletion = NO;
-    moveAnimation.fillMode = kCAFillModeForwards;
-    [_scanView.layer addAnimation:moveAnimation forKey:nil];
+    [self startScanAnim];
 }
 
+
+-(void)startScanAnim
+{
+    if (![_scanView.layer animationForKey:@"ScanAnim"]) {
+        
+        _scanView.alpha = 1.0;
+        CGFloat cHeight = self.bounds.size.height;
+        
+        CABasicAnimation *moveAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
+        moveAnimation.fromValue = @0;
+        moveAnimation.toValue = [NSNumber numberWithFloat:cHeight - 2];
+        moveAnimation.duration = 2.4;
+        moveAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        
+        CABasicAnimation *fadeInAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        fadeInAnimation.fromValue = @0;
+        fadeInAnimation.toValue = @1;
+        fadeInAnimation.duration = 0.6;
+        
+        CABasicAnimation *fadeOutAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        fadeOutAnimation.fromValue = @1;
+        fadeOutAnimation.toValue = @0;
+        fadeOutAnimation.duration = 0.6;
+        fadeOutAnimation.beginTime = 1.8;
+        
+        CAAnimationGroup *group = [CAAnimationGroup animation];
+        group.animations = @[moveAnimation,fadeInAnimation,fadeOutAnimation];
+        group.duration = 2.4;
+        group.repeatCount = HUGE_VALF;
+        group.removedOnCompletion = NO;
+        group.fillMode = kCAFillModeForwards;
+        
+        [_scanView.layer addAnimation:group forKey:@"ScanAnim"];
+    }
+}
+
+
+-(void)stopScanAnim
+{
+    if ([_scanView.layer animationForKey:@"ScanAnim"]) {
+        [_scanView.layer removeAllAnimations];
+        _scanView.alpha = 0.0;
+    }
+}
 
 
 /*

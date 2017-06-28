@@ -10,4 +10,7 @@
 
 @interface JYScanRectView : UIView
 
+-(void)startScanAnim;
+-(void)stopScanAnim;
+
 @end

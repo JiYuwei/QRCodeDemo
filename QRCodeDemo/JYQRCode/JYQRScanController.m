@@ -42,6 +42,7 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     [self.jyQRTool jy_startScaning];
+    [_jyScanRectView startScanAnim];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -132,6 +133,7 @@
 -(void)jy_succeedOutputMataDataObjectToString:(NSString *)outPutString
 {
     _lightBtn.selected = NO;
+    [_jyScanRectView stopScanAnim];
     [self.jyQRTool jy_stopScaning];
     //对扫描获得的数据进行处理
     [self visitWebViewWithUrl:outPutString];
@@ -141,6 +143,7 @@
 {
     [picker dismissViewControllerAnimated:YES completion:^{
         _lightBtn.selected = NO;
+        [_jyScanRectView stopScanAnim];
         [self.jyQRTool jy_stopScaning];
         UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
         //对获得的数据进行处理
@@ -164,6 +167,7 @@
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     [self.jyQRTool jy_startScaning];
+    [_jyScanRectView startScanAnim];
 }
 
 
