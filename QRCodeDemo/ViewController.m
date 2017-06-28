@@ -16,6 +16,9 @@
 
 @property(nonatomic,strong)UIImageView *qrCodeView;
 @property(nonatomic,strong)UITextField *textField;
+@property(nonatomic,strong)UITextField *redField;
+@property(nonatomic,strong)UITextField *greenField;
+@property(nonatomic,strong)UITextField *blueField;
 @property(nonatomic,strong)UIButton *transBtn;
 
 @end
@@ -30,7 +33,8 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"扫一扫" style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
     
     [self createUI];
-    [self generateQRCode:nil];
+    [self createCustomUI];
+    [self generateQRCode];
 }
 
 - (void)openQRScanVC
@@ -48,7 +52,7 @@
     _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 84, cWidth-110, 35)];
     _textField.borderStyle = UITextBorderStyleRoundedRect;
     _textField.text = @"http://www.baidu.com";
-    [_textField addTarget:self action:@selector(textFieldDidChangeCharacters) forControlEvents:UIControlEventEditingChanged];
+    [_textField addTarget:self action:@selector(textFieldDidChangeCharacters:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:_textField];
     
     _transBtn = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -58,7 +62,7 @@
     _transBtn.layer.cornerRadius = 5;
     [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
     _transBtn.titleLabel.font = [UIFont systemFontOfSize:18];
-    [_transBtn addTarget:self action:@selector(generateQRCode:) forControlEvents:UIControlEventTouchUpInside];
+    [_transBtn addTarget:self action:@selector(generateQRCode) forControlEvents:UIControlEventTouchUpInside];
     _transBtn.enabled = NO;
     [self.view addSubview:_transBtn];
     
@@ -73,7 +77,38 @@
     [self.view addSubview:_qrCodeView];
 }
 
--(void)generateQRCode:(UIButton *)sender
+-(void)createCustomUI
+{
+    CGFloat originX = _textField.frame.origin.x;
+    CGFloat originY = _textField.frame.origin.y + _textField.frame.size.height + 10;
+    
+    CGFloat cFHeight = 28;
+    
+    UILabel *colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(originX, originY, 100, cFHeight)];
+    colorLabel.font = [UIFont systemFontOfSize:16];
+    colorLabel.textColor = [UIColor grayColor];
+    colorLabel.text = @"颜色(0-255):";
+    [self.view addSubview:colorLabel];
+    
+    CGFloat cFWidth = 45;
+    
+    [self createColorTextField:_redField rect:CGRectMake(originX + colorLabel.frame.size.width, originY, cFWidth, cFHeight) placeHolder:@"R"];
+    [self createColorTextField:_greenField rect:CGRectMake(originX + colorLabel.frame.size.width + cFWidth, originY, cFWidth, cFHeight) placeHolder:@"G"];
+    [self createColorTextField:_blueField rect:CGRectMake(originX + colorLabel.frame.size.width + cFWidth * 2, originY, cFWidth, cFHeight) placeHolder:@"B"];
+}
+
+-(void)createColorTextField:(UITextField *)colorField rect:(CGRect)rect placeHolder:(NSString *)placeHolder
+{
+    colorField = [[UITextField alloc] initWithFrame:rect];
+    colorField.borderStyle = UITextBorderStyleRoundedRect;
+    colorField.placeholder = placeHolder;
+    colorField.keyboardType = UIKeyboardTypeNumberPad;
+    [colorField addTarget:self action:@selector(textFieldDidChangeCharacters:) forControlEvents:UIControlEventEditingChanged];
+    [self.view addSubview:colorField];
+}
+
+
+-(void)generateQRCode
 {
     if (_textField.text.length > 0) {
         [self controlBtnsEnabled:NO];
@@ -111,20 +146,30 @@
 }
 
 
--(void)textFieldDidChangeCharacters
+-(void)textFieldDidChangeCharacters:(UITextField *)textField
 {
-    if (!_transBtn.isEnabled) {
-        [self controlBtnsEnabled:YES];
+    if (textField == _textField) {
+        if (!_transBtn.isEnabled) {
+            [self controlBtnsEnabled:YES];
+        }
+        else if(_textField.text.length == 0){
+            [self controlBtnsEnabled:NO labelChanged:NO];
+        }
     }
-    else if(_textField.text.length == 0){
-        [self controlBtnsEnabled:NO labelChanged:NO];
+    else{
+        if ([textField.text integerValue] > 255) {
+            textField.text = @"255";
+        }
     }
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    if (_textField.isFirstResponder) {
-        [_textField resignFirstResponder];
+    for (UITextField *field in self.view.subviews) {
+        if (field.isFirstResponder) {
+            [field resignFirstResponder];
+            return;
+        }
     }
 }
 

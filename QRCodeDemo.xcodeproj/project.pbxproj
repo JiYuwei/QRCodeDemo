@@ -14,10 +14,11 @@
 		09EEE3C51F0107C5000152C0 /* QRCodeDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3C41F0107C5000152C0 /* QRCodeDemoTests.m */; };
 		09EEE3D01F0107C5000152C0 /* QRCodeDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3CF1F0107C5000152C0 /* QRCodeDemoUITests.m */; };
 		09EEE3E31F010DC0000152C0 /* JYQRScanController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3E21F010DC0000152C0 /* JYQRScanController.m */; };
-		09EEE3E91F014559000152C0 /* JYScanRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3E81F014559000152C0 /* JYScanRectView.m */; };
-		09EEE3EB1F025A71000152C0 /* sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 09EEE3EA1F025A71000152C0 /* sound.wav */; };
-		09EEE3EF1F026453000152C0 /* JYQRCodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3EE1F026453000152C0 /* JYQRCodeTool.m */; };
 		09EEE3F31F028C5C000152C0 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3F21F028C5C000152C0 /* WebViewController.m */; };
+		09F1F10E1F037EA400EEFE36 /* JYQRCodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F1F10C1F037EA400EEFE36 /* JYQRCodeTool.m */; };
+		09F1F10F1F037EA400EEFE36 /* sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 09F1F10D1F037EA400EEFE36 /* sound.wav */; };
+		09F1F1121F037EB500EEFE36 /* JYScanRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F1F1111F037EB500EEFE36 /* JYScanRectView.m */; };
+		09F1F1141F0384FB00EEFE36 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 09F1F1131F0384FB00EEFE36 /* logo@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,13 +55,14 @@
 		09EEE3D11F0107C5000152C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09EEE3E11F010DC0000152C0 /* JYQRScanController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYQRScanController.h; path = JYQRCode/JYQRScanController.h; sourceTree = "<group>"; };
 		09EEE3E21F010DC0000152C0 /* JYQRScanController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYQRScanController.m; path = JYQRCode/JYQRScanController.m; sourceTree = "<group>"; };
-		09EEE3E71F014559000152C0 /* JYScanRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYScanRectView.h; path = JYQRCode/JYScanRectView.h; sourceTree = "<group>"; };
-		09EEE3E81F014559000152C0 /* JYScanRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYScanRectView.m; path = JYQRCode/JYScanRectView.m; sourceTree = "<group>"; };
-		09EEE3EA1F025A71000152C0 /* sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = sound.wav; path = JYQRCode/sound.wav; sourceTree = "<group>"; };
-		09EEE3ED1F026453000152C0 /* JYQRCodeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYQRCodeTool.h; path = JYQRCode/JYQRCodeTool.h; sourceTree = "<group>"; };
-		09EEE3EE1F026453000152C0 /* JYQRCodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYQRCodeTool.m; path = JYQRCode/JYQRCodeTool.m; sourceTree = "<group>"; };
 		09EEE3F11F028C5C000152C0 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		09EEE3F21F028C5C000152C0 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		09F1F10B1F037EA400EEFE36 /* JYQRCodeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYQRCodeTool.h; path = JYQRCode/JYQRCodeTools/JYQRCodeTool.h; sourceTree = "<group>"; };
+		09F1F10C1F037EA400EEFE36 /* JYQRCodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYQRCodeTool.m; path = JYQRCode/JYQRCodeTools/JYQRCodeTool.m; sourceTree = "<group>"; };
+		09F1F10D1F037EA400EEFE36 /* sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = sound.wav; path = JYQRCode/JYQRCodeTools/sound.wav; sourceTree = "<group>"; };
+		09F1F1101F037EB500EEFE36 /* JYScanRectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JYScanRectView.h; path = JYQRCode/Views/JYScanRectView.h; sourceTree = "<group>"; };
+		09F1F1111F037EB500EEFE36 /* JYScanRectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JYScanRectView.m; path = JYQRCode/Views/JYScanRectView.m; sourceTree = "<group>"; };
+		09F1F1131F0384FB00EEFE36 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "JYQRCode/JYQRCodeTools/logo@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,9 +167,10 @@
 		09EEE3EC1F0263F1000152C0 /* JYQRCodeTools */ = {
 			isa = PBXGroup;
 			children = (
-				09EEE3EA1F025A71000152C0 /* sound.wav */,
-				09EEE3ED1F026453000152C0 /* JYQRCodeTool.h */,
-				09EEE3EE1F026453000152C0 /* JYQRCodeTool.m */,
+				09F1F1131F0384FB00EEFE36 /* logo@2x.png */,
+				09F1F10D1F037EA400EEFE36 /* sound.wav */,
+				09F1F10B1F037EA400EEFE36 /* JYQRCodeTool.h */,
+				09F1F10C1F037EA400EEFE36 /* JYQRCodeTool.m */,
 			);
 			name = JYQRCodeTools;
 			sourceTree = "<group>";
@@ -175,8 +178,8 @@
 		09EEE3F01F0264BC000152C0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				09EEE3E71F014559000152C0 /* JYScanRectView.h */,
-				09EEE3E81F014559000152C0 /* JYScanRectView.m */,
+				09F1F1101F037EB500EEFE36 /* JYScanRectView.h */,
+				09F1F1111F037EB500EEFE36 /* JYScanRectView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -290,7 +293,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09EEE3EB1F025A71000152C0 /* sound.wav in Resources */,
+				09F1F10F1F037EA400EEFE36 /* sound.wav in Resources */,
+				09F1F1141F0384FB00EEFE36 /* logo@2x.png in Resources */,
 				09EEE3B71F0107C5000152C0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -320,8 +324,8 @@
 				09EEE3F31F028C5C000152C0 /* WebViewController.m in Sources */,
 				09EEE3AF1F0107C5000152C0 /* AppDelegate.m in Sources */,
 				09EEE3E31F010DC0000152C0 /* JYQRScanController.m in Sources */,
-				09EEE3E91F014559000152C0 /* JYScanRectView.m in Sources */,
-				09EEE3EF1F026453000152C0 /* JYQRCodeTool.m in Sources */,
+				09F1F1121F037EB500EEFE36 /* JYScanRectView.m in Sources */,
+				09F1F10E1F037EA400EEFE36 /* JYQRCodeTool.m in Sources */,
 				09EEE3AC1F0107C5000152C0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
