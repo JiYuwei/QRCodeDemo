@@ -152,17 +152,28 @@
         _lightBtn.selected = NO;
         [_jyScanRectView stopScanAnim];
         [self.jyQRTool jy_stopScaning];
-        UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-        //对获得的数据进行处理
-        NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:pickImage];
         
-        if (urlStr) {
-            [self visitWebViewWithUrl:urlStr];
-        }
-        else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-        }
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+            //对获得的数据进行处理
+            
+            NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:pickImage];
+            
+            if (!urlStr) {
+                UIImage *scaleImage = [JYQRCodeTool jy_getImage:pickImage scaleToSize:CGSizeMake(200, 200)];
+                urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:scaleImage];
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (urlStr) {
+                    [self visitWebViewWithUrl:urlStr];
+                }
+                else{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                }
+            });
+        });
     }];
 }
 

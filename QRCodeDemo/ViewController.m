@@ -126,7 +126,7 @@
 
 -(void)readQRCode
 {
-    NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeImageWithSourceImage:_qrCodeView.image];
+    NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:_qrCodeView.image];
     NSLog(@"%@",urlStr);
     
     //对识别出的数据进行处理

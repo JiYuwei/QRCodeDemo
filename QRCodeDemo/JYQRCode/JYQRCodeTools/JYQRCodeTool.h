@@ -112,7 +112,18 @@
  *
  * @return 识别获得的数据
  **/
-+ (NSString *)jy_detectorQRCodeImageWithSourceImage:(UIImage *)sourceImage;
++ (NSString *)jy_detectorQRCodeWithSourceImage:(UIImage *)sourceImage;
+
+
+/**
+ * 改变图片尺寸
+ *
+ * @param image  原图片
+ * @param size   需要改变的尺寸
+ *
+ * @return 修改后的图片
+ **/
++(UIImage*)jy_getImage:(UIImage *)image scaleToSize:(CGSize)size;
 
 
 @end
