@@ -20,6 +20,7 @@
 @property(nonatomic,strong)UITextField *greenField;
 @property(nonatomic,strong)UITextField *blueField;
 @property(nonatomic,strong)UIButton *transBtn;
+@property(nonatomic,strong)UISwitch *logoSwitch;
 
 @end
 
@@ -57,7 +58,7 @@
     
     _transBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _transBtn.frame = CGRectMake(_textField.frame.origin.x + _textField.frame.size.width + 10, _textField.frame.origin.y, 60, 35);
-    _transBtn.layer.borderColor = BTN_BORDER_COLOR.CGColor;
+    _transBtn.layer.borderColor = [UIColor grayColor].CGColor;
     _transBtn.layer.borderWidth = 0.5;
     _transBtn.layer.cornerRadius = 5;
     [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
@@ -68,7 +69,7 @@
     
     CGFloat vWidth = 250;
     
-    _qrCodeView = [[UIImageView alloc] initWithFrame:CGRectMake((cWidth - vWidth) / 2, (cHeight - vWidth) / 2, vWidth, vWidth)];
+    _qrCodeView = [[UIImageView alloc] initWithFrame:CGRectMake((cWidth - vWidth) / 2, (cHeight - vWidth) / 2 + 50, vWidth, vWidth)];
     _qrCodeView.backgroundColor = [UIColor whiteColor];
     _qrCodeView.layer.borderColor = [UIColor grayColor].CGColor;
     _qrCodeView.layer.borderWidth = 1.0;
@@ -80,26 +81,46 @@
 -(void)createCustomUI
 {
     CGFloat originX = _textField.frame.origin.x;
-    CGFloat originY = _textField.frame.origin.y + _textField.frame.size.height + 10;
+    CGFloat originY = _textField.frame.origin.y + _textField.frame.size.height + 20;
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     
     CGFloat cFHeight = 28;
+    CGFloat cFWidth = 45;
     
-    UILabel *colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(originX, originY, 100, cFHeight)];
+    UILabel *colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(originX, originY, cFWidth, cFHeight)];
     colorLabel.font = [UIFont systemFontOfSize:16];
     colorLabel.textColor = [UIColor grayColor];
-    colorLabel.text = @"颜色(0-255):";
+    colorLabel.text = @"颜色:";
     [self.view addSubview:colorLabel];
     
-    CGFloat cFWidth = 45;
+    _redField = [[UITextField alloc] init];
+    _greenField = [[UITextField alloc] init];
+    _blueField = [[UITextField alloc] init];
     
     [self createColorTextField:_redField rect:CGRectMake(originX + colorLabel.frame.size.width, originY, cFWidth, cFHeight) placeHolder:@"R"];
     [self createColorTextField:_greenField rect:CGRectMake(originX + colorLabel.frame.size.width + cFWidth, originY, cFWidth, cFHeight) placeHolder:@"G"];
     [self createColorTextField:_blueField rect:CGRectMake(originX + colorLabel.frame.size.width + cFWidth * 2, originY, cFWidth, cFHeight) placeHolder:@"B"];
+    
+    UILabel *logoLabel = [[UILabel alloc] initWithFrame:CGRectMake(screenWidth - cFWidth - 70, originY, cFWidth, cFHeight)];
+    logoLabel.font = [UIFont systemFontOfSize:16];
+    logoLabel.textColor = [UIColor grayColor];
+    logoLabel.text = @"Logo:";
+    [self.view addSubview:logoLabel];
+    
+    _logoSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(screenWidth - 70, originY - 1, 0, 0)];
+    _logoSwitch.tintColor = [UIColor lightGrayColor];
+    [_logoSwitch addTarget:self action:@selector(switchChanged) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:_logoSwitch];
+}
+
+-(void)switchChanged
+{
+    [self controlBtnsEnabled:YES];
 }
 
 -(void)createColorTextField:(UITextField *)colorField rect:(CGRect)rect placeHolder:(NSString *)placeHolder
 {
-    colorField = [[UITextField alloc] initWithFrame:rect];
+    colorField.frame = rect;
     colorField.borderStyle = UITextBorderStyleRoundedRect;
     colorField.placeholder = placeHolder;
     colorField.keyboardType = UIKeyboardTypeNumberPad;
@@ -107,13 +128,35 @@
     [self.view addSubview:colorField];
 }
 
-
+//生成二维码
 -(void)generateQRCode
 {
-    if (_textField.text.length > 0) {
-        [self controlBtnsEnabled:NO];
-        _qrCodeView.image = [JYQRCodeTool jy_createQRCodeWithString:_textField.text size:_qrCodeView.bounds.size.width];
+    
+    [self controlBtnsEnabled:NO];
+    
+    UIImage *qrImage = [JYQRCodeTool jy_createQRCodeWithString:_textField.text size:_qrCodeView.bounds.size.width];
+    
+    NSArray <NSNumber *> *colorArr = @[[NSNumber numberWithFloat:_redField.text.floatValue],
+                                       [NSNumber numberWithFloat:_greenField.text.floatValue],
+                                       [NSNumber numberWithFloat:_blueField.text.floatValue]];
+    
+    for (NSNumber *num in colorArr) {
+        if (num.floatValue > 0) {
+            
+            BOOL isDarkBG = (colorArr[0].floatValue > 128 && colorArr[1].floatValue > 128 && colorArr[2].floatValue > 128);
+            _qrCodeView.backgroundColor = isDarkBG?[UIColor blackColor]:[UIColor whiteColor];
+            
+            qrImage = [JYQRCodeTool jy_customQRCodeWithImage:qrImage colorWithRed:colorArr[0].floatValue andGreen:colorArr[1].floatValue andBlue:colorArr[2].floatValue];
+            break;
+        }
     }
+    
+    if (_logoSwitch.isOn) {
+        qrImage = [JYQRCodeTool jy_customQRCodeWithImage:qrImage addAvatarImage:[UIImage imageNamed:@"logo"]];
+    }
+    
+    _qrCodeView.image = qrImage;
+    
 }
 
 -(void)qrCodeAction
@@ -149,17 +192,19 @@
 -(void)textFieldDidChangeCharacters:(UITextField *)textField
 {
     if (textField == _textField) {
-        if (!_transBtn.isEnabled) {
-            [self controlBtnsEnabled:YES];
-        }
-        else if(_textField.text.length == 0){
+        if(_textField.text.length == 0){
             [self controlBtnsEnabled:NO labelChanged:NO];
+        }
+        else{
+            [self controlBtnsEnabled:YES];
         }
     }
     else{
         if ([textField.text integerValue] > 255) {
             textField.text = @"255";
         }
+        
+        [self controlBtnsEnabled:YES];
     }
 }
 
@@ -174,7 +219,6 @@
 }
 
 
-
 -(void)controlBtnsEnabled:(BOOL)enable
 {
     return [self controlBtnsEnabled:enable labelChanged:YES];
@@ -183,18 +227,22 @@
 -(void)controlBtnsEnabled:(BOOL)enable labelChanged:(BOOL)change
 {
     if (enable) {
-        if (change) {
-            [_transBtn setTitle:@"生成" forState:UIControlStateNormal];
+        if (!_transBtn.isEnabled) {
+            if (change) {
+                [_transBtn setTitle:@"生成" forState:UIControlStateNormal];
+            }
+            _transBtn.enabled = YES;
+            _transBtn.layer.borderColor = BTN_BORDER_COLOR.CGColor;
         }
-        _transBtn.enabled = YES;
-        _transBtn.layer.borderColor = BTN_BORDER_COLOR.CGColor;
     }
     else{
-        if (change) {
-            [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
+        if (_transBtn.isEnabled) {
+            if (change) {
+                [_transBtn setTitle:@"已生成" forState:UIControlStateNormal];
+            }
+            _transBtn.enabled = NO;
+            _transBtn.layer.borderColor = [UIColor grayColor].CGColor;
         }
-        _transBtn.enabled = NO;
-        _transBtn.layer.borderColor = [UIColor grayColor].CGColor;
     }
 }
 

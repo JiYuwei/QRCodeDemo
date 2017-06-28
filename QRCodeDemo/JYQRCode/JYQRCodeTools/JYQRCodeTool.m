@@ -232,14 +232,13 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     const int imageWidth = image.size.width;
     const int imageHeight = image.size.height;
     size_t      bytesPerRow = imageWidth * 4;
-    uint32_t* rgbImageBuf = (uint32_t*)malloc(bytesPerRow * imageHeight);
+    uint32_t *rgbImageBuf = (uint32_t *)malloc(bytesPerRow *imageHeight);
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(rgbImageBuf, imageWidth, imageHeight, 8, bytesPerRow, colorSpace,
-                                                 kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast);
+    CGContextRef context = CGBitmapContextCreate(rgbImageBuf, imageWidth, imageHeight, 8, bytesPerRow, colorSpace,kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast);
     CGContextDrawImage(context, CGRectMake(0, 0, imageWidth, imageHeight), image.CGImage);
     // 遍历像素
     int pixelNum = imageWidth * imageHeight;
-    uint32_t* pCurPtr = rgbImageBuf;
+    uint32_t *pCurPtr = rgbImageBuf;
     for (int i = 0; i < pixelNum; i++, pCurPtr++){
         if ((*pCurPtr & 0xFFFFFF00) < 0x99999900)    // 将白色变成透明
         {
@@ -276,13 +275,13 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     if (!avatarImage) {
         return qrImage;
     }
-    BOOL opaque = 1.0;
+    BOOL opaque = 0.0;
     // 获取当前设备的scale
     CGFloat scale = [UIScreen mainScreen].scale;
     // 创建画布Rect
     CGRect qrRect = CGRectMake(0, 0, size.width, size.height);
     // 头像大小 _不能大于_ 画布的1/4 （这个大小之内的不会遮挡二维码的有效信息）
-    CGFloat avatarWidth = (size.width/4.0);
+    CGFloat avatarWidth = (size.width/6.0);
     CGFloat avatarHeight = avatarWidth;
     //调用一个新的切割绘图方法 crop image add cornerRadius  (裁切头像图片为圆角，并添加bored   返回一个newimage)
     avatarImage = [self clipCornerRadius:avatarImage withSize:CGSizeMake(avatarWidth, avatarHeight)];
