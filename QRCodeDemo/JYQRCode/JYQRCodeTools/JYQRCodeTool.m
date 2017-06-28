@@ -286,7 +286,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     // 创建画布Rect
     CGRect qrRect = CGRectMake(0, 0, size.width, size.height);
     // 头像大小 _不能大于_ 画布的1/4 （这个大小之内的不会遮挡二维码的有效信息）
-    CGFloat avatarWidth = (size.width/6.0);
+    CGFloat avatarWidth = (size.width/5.0);
     CGFloat avatarHeight = avatarWidth;
     //调用一个新的切割绘图方法 crop image add cornerRadius  (裁切头像图片为圆角，并添加bored   返回一个newimage)
     avatarImage = [self clipCornerRadius:avatarImage withSize:CGSizeMake(avatarWidth, avatarHeight)];
@@ -321,7 +321,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     // 黑色border的宽度
     CGFloat innerWidth = outerWidth/10.0;
     // 圆角这个就是我觉着的适合的一个值 ，可以自行改
-    CGFloat corenerRadius = size.width/5.0;
+    CGFloat corenerRadius = size.width/8.0;
     // 为context创建一个区域
     CGRect areaRect = CGRectMake(0, 0, size.width, size.height);
     UIBezierPath *areaPath = [UIBezierPath bezierPathWithRoundedRect:areaRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(corenerRadius, corenerRadius)];
@@ -335,9 +335,9 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     CGRect innerRect = CGRectInset(outerRect, innerOrigin, innerOrigin);
     // 要进行rect之间的计算，我想 "CGRectInset" 是一个不错的选择。
     //  外层path
-    UIBezierPath *outerPath = [UIBezierPath bezierPathWithRoundedRect:outerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(outerRect.size.width/5.0, outerRect.size.width/5.0)];
+    UIBezierPath *outerPath = [UIBezierPath bezierPathWithRoundedRect:outerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(outerRect.size.width/8.0, outerRect.size.width/8.0)];
     //  内层path
-    UIBezierPath *innerPath = [UIBezierPath bezierPathWithRoundedRect:innerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(innerRect.size.width/5.0, innerRect.size.width/5.0)];
+    UIBezierPath *innerPath = [UIBezierPath bezierPathWithRoundedRect:innerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(innerRect.size.width/8.0, innerRect.size.width/8.0)];
     // 要保证"内外层"的吻合，那就要进行比例相等，就能达到形状的完全匹配
     // 创建上下文
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
