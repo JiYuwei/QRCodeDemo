@@ -155,7 +155,6 @@
         
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-            //对获得的数据进行处理
             
             NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:pickImage];
             
@@ -165,6 +164,7 @@
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
+                //对获得的数据进行处理
                 if (urlStr) {
                     [self visitWebViewWithUrl:urlStr];
                 }

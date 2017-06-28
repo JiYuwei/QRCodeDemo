@@ -126,23 +126,28 @@
 
 -(void)readQRCode
 {
-    NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:_qrCodeView.image];
-    NSLog(@"%@",urlStr);
-    
-    if (!urlStr) {
-        UIImage *scaleImage = [JYQRCodeTool jy_getImage:_qrCodeView.image scaleToSize:CGSizeMake(200, 200)];
-        urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:scaleImage];
-    }
-    //对识别出的数据进行处理
-    if (urlStr) {
-        WebViewController *webVC = [[WebViewController alloc] init];
-        webVC.urlStr = urlStr;
-        [self.navigationController pushViewController:webVC animated:YES];
-    }
-    else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:_qrCodeView.image];
+        NSLog(@"%@",urlStr);
+        
+        if (!urlStr) {
+            UIImage *scaleImage = [JYQRCodeTool jy_getImage:_qrCodeView.image scaleToSize:CGSizeMake(200, 200)];
+            urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:scaleImage];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //对识别出的数据进行处理
+            if (urlStr) {
+                WebViewController *webVC = [[WebViewController alloc] init];
+                webVC.urlStr = urlStr;
+                [self.navigationController pushViewController:webVC animated:YES];
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+            }
+        });
+    });
 }
 
 #pragma mark - SavePhoto
