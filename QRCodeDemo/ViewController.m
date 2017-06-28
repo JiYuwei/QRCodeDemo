@@ -129,6 +129,10 @@
     NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:_qrCodeView.image];
     NSLog(@"%@",urlStr);
     
+    if (!urlStr) {
+        UIImage *scaleImage = [JYQRCodeTool jy_getImage:_qrCodeView.image scaleToSize:CGSizeMake(200, 200)];
+        urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:scaleImage];
+    }
     //对识别出的数据进行处理
     if (urlStr) {
         WebViewController *webVC = [[WebViewController alloc] init];
