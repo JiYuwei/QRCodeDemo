@@ -44,7 +44,12 @@
 
 #pragma mark - Public
 
-- (void)jy_setUpCaptureWithRect:(CGRect)rect
+-(void)jy_setUpCaptureWithRect:(CGRect)rect
+{
+    return [self jy_setUpCaptureWithRect:rect success:nil];
+}
+
+- (void)jy_setUpCaptureWithRect:(CGRect)rect success:(void(^)())successCB
 {
     [self setCropRect:rect];
     
@@ -54,7 +59,7 @@
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
     {
-        [self setUpCaptureWithRect:rectOfInterest];
+        [self setUpCaptureWithRect:rectOfInterest succees:successCB];
     }
     else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"设备不支持该功能" message:nil delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -158,7 +163,7 @@
     [_bindVC.view.layer addSublayer:cropLayer];
 }
 
-- (void)setUpCaptureWithRect:(CGRect)rectOfInterest
+- (void)setUpCaptureWithRect:(CGRect)rectOfInterest succees:(void(^)())successCB
 {
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     
@@ -188,6 +193,10 @@
             [_bindVC.view.layer insertSublayer:_jyPreview atIndex:0];
             
             [_jySession startRunning];
+            
+            if (successCB) {
+                successCB();
+            }
         });
     }
 }

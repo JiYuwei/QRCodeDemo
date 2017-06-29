@@ -19,6 +19,9 @@
 @property(nonatomic,strong)UILabel *scanLabel;
 @property(nonatomic,strong)UIButton *lightBtn;
 
+@property(nonatomic,getter=isScanActive)BOOL scanActive;
+@property(nonatomic,getter=isCallBackFromPhoto)BOOL callBackFromPhoto;
+
 @end
 
 
@@ -41,8 +44,13 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    [self.jyQRTool jy_startScaning];
-    [_jyScanRectView startScanAnim];
+    
+    if (!self.isCallBackFromPhoto) {
+        self.scanActive = YES;
+    }
+    else{
+        self.callBackFromPhoto = NO;
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -59,15 +67,20 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(openPhotoLibrary)];
     self.navigationItem.title = @"扫一扫";
     
+    _scanActive = YES;
+    
     CGSize cSize = [UIScreen mainScreen].bounds.size;
     
-    CGSize scanSize = CGSizeMake(cSize.width * 3/4, cSize.width * 3/4);
+    CGSize scanSize = CGSizeMake(cSize.width * 2.8/4, cSize.width * 2.8/4);
     CGRect scanRect = CGRectMake((cSize.width - scanSize.width) / 2, (cSize.height - scanSize.height) / 2, scanSize.width, scanSize.height);
-    
-    [self.jyQRTool jy_setUpCaptureWithRect:scanRect];
     
     [self setUpRectViewWithRect:scanRect];
     [self setUpLightButton];
+    
+    _jyScanRectView.loading = YES;
+    [self.jyQRTool jy_setUpCaptureWithRect:scanRect success:^{
+        _jyScanRectView.loading = NO;
+    }];
 }
 
 
@@ -80,7 +93,7 @@
     [self.view addSubview:_jyScanRectView];
     
     _scanLabel = [[UILabel alloc] initWithFrame:CGRectMake(_jyScanRectView.frame.origin.x, _jyScanRectView.frame.origin.y + _jyScanRectView.frame.size.height + 5, _jyScanRectView.frame.size.width, 30)];
-    _scanLabel.textColor = [UIColor grayColor];
+    _scanLabel.textColor = [UIColor whiteColor];
     _scanLabel.font = [UIFont systemFontOfSize:13];
     _scanLabel.textAlignment = NSTextAlignmentCenter;
     _scanLabel.text = @"将二维码/条码放入框内，即可自动扫描";
@@ -135,23 +148,42 @@
     [self.navigationController pushViewController:webVC animated:YES];
 }
 
+
+#pragma mark - Override Setter & Getters
+
+//启用／禁用扫描
+-(void)setScanActive:(BOOL)scanActive
+{
+    if (_scanActive != scanActive) {
+        _scanActive = scanActive;
+        
+        if (_scanActive) {
+            _jyScanRectView.loading = NO;
+            [self.jyQRTool jy_startScaning];
+        }
+        else{
+            _lightBtn.selected = NO;
+            _jyScanRectView.loading = YES;
+            [self.jyQRTool jy_stopScaning];
+        }
+    }
+}
+
 #pragma mark - Delegate
 
 -(void)jy_succeedOutputMataDataObjectToString:(NSString *)outPutString
 {
-    _lightBtn.selected = NO;
-    [_jyScanRectView stopScanAnim];
-    [self.jyQRTool jy_stopScaning];
+    self.scanActive = NO;
     //对扫描获得的数据进行处理
     [self visitWebViewWithUrl:outPutString];
 }
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
+    self.callBackFromPhoto = YES;
+    self.scanActive = NO;
+
     [picker dismissViewControllerAnimated:YES completion:^{
-        _lightBtn.selected = NO;
-        [_jyScanRectView stopScanAnim];
-        [self.jyQRTool jy_stopScaning];
         
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             UIImage *pickImage = [info objectForKey:UIImagePickerControllerOriginalImage];
@@ -167,6 +199,7 @@
                 //对获得的数据进行处理
                 if (urlStr) {
                     [self visitWebViewWithUrl:urlStr];
+                    
                 }
                 else{
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"结果" message:@"未识别到有效信息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -184,8 +217,7 @@
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    [self.jyQRTool jy_startScaning];
-    [_jyScanRectView startScanAnim];
+    self.scanActive = YES;
 }
 
 

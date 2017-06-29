@@ -47,6 +47,15 @@
 
 
 /**
+ * 初始化扫描二维码功能，添加完成后回调
+ *
+ * @param rect       扫描范围
+ * @param successCB  完成后回调
+ **/
+- (void)jy_setUpCaptureWithRect:(CGRect)rect success:(void(^)())successCB;
+
+
+/**
  * 控制闪光灯开关
  *
  * @param lock 闪光灯开关，YES时开启，NO时关闭，默认为NO

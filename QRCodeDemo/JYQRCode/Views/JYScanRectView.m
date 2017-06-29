@@ -11,6 +11,7 @@
 @interface JYScanRectView ()
 
 @property(nonatomic,strong)UIView *scanView;
+@property(nonatomic,strong)UIView *loadingView;
 
 @end
 
@@ -24,69 +25,14 @@
         
         [self customScanCorners];
         [self customScanLine];
+        [self customLoadingView];
     }
     
     return self;
 }
 
-#pragma mark - CustomUI
 
-//添加四角标识
--(void)customScanCorners
-{
-    CGFloat cWidth = self.bounds.size.width;
-    CGFloat cHeight = self.bounds.size.height;
-    
-    NSArray *pointArray = @[@{@"top":[NSValue valueWithCGPoint:CGPointMake(-1, 20)],
-                              @"mid":[NSValue valueWithCGPoint:CGPointMake(-1, -1)],
-                              @"end":[NSValue valueWithCGPoint:CGPointMake(20, -1)]},
-                            
-                            @{@"top":[NSValue valueWithCGPoint:CGPointMake(cWidth - 20, -1)],
-                              @"mid":[NSValue valueWithCGPoint:CGPointMake(cWidth + 1, -1)],
-                              @"end":[NSValue valueWithCGPoint:CGPointMake(cWidth + 1, 20)]},
-                            
-                            @{@"top":[NSValue valueWithCGPoint:CGPointMake(cWidth + 1, cHeight - 20)],
-                              @"mid":[NSValue valueWithCGPoint:CGPointMake(cWidth + 1, cHeight + 1)],
-                              @"end":[NSValue valueWithCGPoint:CGPointMake(cWidth - 20, cHeight + 1)]},
-                            
-                            @{@"top":[NSValue valueWithCGPoint:CGPointMake(20, cHeight + 1)],
-                              @"mid":[NSValue valueWithCGPoint:CGPointMake(-1, cHeight + 1)],
-                              @"end":[NSValue valueWithCGPoint:CGPointMake(-1, cHeight - 20)]},];
-    
-    
-    for (NSInteger i = 0; i < pointArray.count; i++) {
-        
-        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-        shapeLayer.lineWidth = 3.0;
-        shapeLayer.strokeColor = [UIColor greenColor].CGColor;
-        shapeLayer.fillColor = [UIColor clearColor].CGColor;
-        
-        UIBezierPath *path = [UIBezierPath bezierPath];
-        [path moveToPoint:[pointArray[i][@"top"] CGPointValue]];
-        [path addLineToPoint:[pointArray[i][@"mid"] CGPointValue]];
-        [path addLineToPoint:[pointArray[i][@"end"] CGPointValue]];
-        
-        shapeLayer.path = path.CGPath;
-        
-        [self.layer addSublayer:shapeLayer];
-    }
-    
-}
-
-//添加扫描线
--(void)customScanLine
-{
-    CGFloat cWidth = self.bounds.size.width;
-    
-    _scanView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cWidth, 2)];
-    _scanView.backgroundColor = [UIColor greenColor];
-    _scanView.alpha = 0.0;
-    
-    [self addSubview:_scanView];
-    
-    [self startScanAnim];
-}
-
+#pragma mark - Public
 
 -(void)startScanAnim
 {
@@ -132,6 +78,100 @@
     }
 }
 
+#pragma mark - CustomUI
+
+//添加四角标识
+-(void)customScanCorners
+{
+    CGFloat cWidth = self.bounds.size.width;
+    CGFloat cHeight = self.bounds.size.height;
+    
+    NSArray *pointArray = @[@{@"top":[NSValue valueWithCGPoint:CGPointMake(2, 20)],
+                              @"mid":[NSValue valueWithCGPoint:CGPointMake(2, 2)],
+                              @"end":[NSValue valueWithCGPoint:CGPointMake(20, 2)]},
+                            
+                            @{@"top":[NSValue valueWithCGPoint:CGPointMake(cWidth - 20, 2)],
+                              @"mid":[NSValue valueWithCGPoint:CGPointMake(cWidth - 2, 2)],
+                              @"end":[NSValue valueWithCGPoint:CGPointMake(cWidth - 2, 20)]},
+                            
+                            @{@"top":[NSValue valueWithCGPoint:CGPointMake(cWidth - 2, cHeight - 20)],
+                              @"mid":[NSValue valueWithCGPoint:CGPointMake(cWidth - 2, cHeight - 2)],
+                              @"end":[NSValue valueWithCGPoint:CGPointMake(cWidth - 20, cHeight - 2)]},
+                            
+                            @{@"top":[NSValue valueWithCGPoint:CGPointMake(20, cHeight - 2)],
+                              @"mid":[NSValue valueWithCGPoint:CGPointMake(2, cHeight - 2)],
+                              @"end":[NSValue valueWithCGPoint:CGPointMake(2, cHeight - 20)]},];
+    
+    
+    for (NSInteger i = 0; i < pointArray.count; i++) {
+        
+        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+        shapeLayer.lineWidth = 3.0;
+        shapeLayer.strokeColor = [UIColor greenColor].CGColor;
+        shapeLayer.fillColor = [UIColor clearColor].CGColor;
+        
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        [path moveToPoint:[pointArray[i][@"top"] CGPointValue]];
+        [path addLineToPoint:[pointArray[i][@"mid"] CGPointValue]];
+        [path addLineToPoint:[pointArray[i][@"end"] CGPointValue]];
+        
+        shapeLayer.path = path.CGPath;
+        
+        [self.layer addSublayer:shapeLayer];
+    }
+    
+}
+
+//添加扫描线
+-(void)customScanLine
+{
+    CGFloat cWidth = self.bounds.size.width;
+    
+    _scanView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cWidth, 2)];
+    _scanView.backgroundColor = [UIColor greenColor];
+    _scanView.alpha = 0.0;
+    
+    [self addSubview:_scanView];
+}
+
+//添加loading视图
+
+-(void)customLoadingView
+{
+    _loadingView = [[UIView alloc] initWithFrame:self.bounds];
+    _loadingView.backgroundColor = [UIColor blackColor];
+    _loadingView.alpha = 0.0;
+    [self addSubview:_loadingView];
+    
+    UIActivityIndicatorView *actView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    actView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    [actView startAnimating];
+    [_loadingView addSubview:actView];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, self.bounds.size.height / 2 + 25, self.bounds.size.width - 40, 30)];
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont systemFontOfSize:15];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = @"处理中，请稍候";
+    [_loadingView addSubview:label];
+}
+
+#pragma mark - Override Setter & Getters
+
+-(void)setLoading:(BOOL)loading
+{
+    if (_loading != loading) {
+        _loading = loading;
+        
+        _loadingView.alpha = _loading?0.6:0.0;
+        if (!loading) {
+            [self startScanAnim];
+        }
+        else{
+            [self stopScanAnim];
+        }
+    }
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.
