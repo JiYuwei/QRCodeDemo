@@ -31,53 +31,6 @@
     return self;
 }
 
-
-#pragma mark - Public
-
--(void)startScanAnim
-{
-    if (![_scanView.layer animationForKey:@"ScanAnim"]) {
-        
-        _scanView.alpha = 1.0;
-        CGFloat cHeight = self.bounds.size.height;
-        
-        CABasicAnimation *moveAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
-        moveAnimation.fromValue = @0;
-        moveAnimation.toValue = [NSNumber numberWithFloat:cHeight - 2];
-        moveAnimation.duration = 2.4;
-        moveAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        
-        CABasicAnimation *fadeInAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        fadeInAnimation.fromValue = @0;
-        fadeInAnimation.toValue = @1;
-        fadeInAnimation.duration = 0.6;
-        
-        CABasicAnimation *fadeOutAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        fadeOutAnimation.fromValue = @1;
-        fadeOutAnimation.toValue = @0;
-        fadeOutAnimation.duration = 0.6;
-        fadeOutAnimation.beginTime = 1.8;
-        
-        CAAnimationGroup *group = [CAAnimationGroup animation];
-        group.animations = @[moveAnimation,fadeInAnimation,fadeOutAnimation];
-        group.duration = 2.4;
-        group.repeatCount = HUGE_VALF;
-        group.removedOnCompletion = NO;
-        group.fillMode = kCAFillModeForwards;
-        
-        [_scanView.layer addAnimation:group forKey:@"ScanAnim"];
-    }
-}
-
-
--(void)stopScanAnim
-{
-    if ([_scanView.layer animationForKey:@"ScanAnim"]) {
-        [_scanView.layer removeAllAnimations];
-        _scanView.alpha = 0.0;
-    }
-}
-
 #pragma mark - CustomUI
 
 //添加四角标识
@@ -173,45 +126,56 @@
     }
 }
 
+-(void)startScanAnim
+{
+    if (![_scanView.layer animationForKey:@"ScanAnim"]) {
+        
+        _scanView.alpha = 1.0;
+        CGFloat cHeight = self.bounds.size.height;
+        
+        CABasicAnimation *moveAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
+        moveAnimation.fromValue = @0;
+        moveAnimation.toValue = [NSNumber numberWithFloat:cHeight - 2];
+        moveAnimation.duration = 2.4;
+        moveAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        
+        CABasicAnimation *fadeInAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        fadeInAnimation.fromValue = @0;
+        fadeInAnimation.toValue = @1;
+        fadeInAnimation.duration = 0.6;
+        
+        CABasicAnimation *fadeOutAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        fadeOutAnimation.fromValue = @1;
+        fadeOutAnimation.toValue = @0;
+        fadeOutAnimation.duration = 0.6;
+        fadeOutAnimation.beginTime = 1.8;
+        
+        CAAnimationGroup *group = [CAAnimationGroup animation];
+        group.animations = @[moveAnimation,fadeInAnimation,fadeOutAnimation];
+        group.duration = 2.4;
+        group.repeatCount = HUGE_VALF;
+        group.removedOnCompletion = NO;
+        group.fillMode = kCAFillModeForwards;
+        
+        [_scanView.layer addAnimation:group forKey:@"ScanAnim"];
+    }
+}
+
+
+-(void)stopScanAnim
+{
+    if ([_scanView.layer animationForKey:@"ScanAnim"]) {
+        [_scanView.layer removeAllAnimations];
+        _scanView.alpha = 0.0;
+    }
+}
+
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetLineWidth(context, 1.0);
-    [[UIColor whiteColor] setStroke];
-    [[UIColor clearColor] setFill];
-    
-    CGContextBeginPath(context);
-    
-    //左上角
-    CGContextMoveToPoint(context, 0, 20);
-    
-    CGContextAddLineToPoint(context, 0, 0);
-    CGContextAddLineToPoint(context, 20, 0);
-    
-    //右上角
-    CGContextMoveToPoint(context, rect.size.width - 20, 0);
-    
-    CGContextAddLineToPoint(context, rect.size.width, 0);
-    CGContextAddLineToPoint(context, rect.size.width, 20);
-    
-    //左下角
-    CGContextMoveToPoint(context, 0, rect.size.height - 20);
-    
-    CGContextAddLineToPoint(context, 0, rect.size.height);
-    CGContextAddLineToPoint(context, 20, rect.size.height);
-    
-    //右下角
-    CGContextMoveToPoint(context, rect.size.width - 20, rect.size.height);
-    
-    CGContextAddLineToPoint(context, rect.size.width, rect.size.height);
-    CGContextAddLineToPoint(context, rect.size.width, rect.size.height - 20);
-    
-    CGContextStrokePath(context);
-    
-    CGContextClosePath(context);
+ 
 }
 */
 

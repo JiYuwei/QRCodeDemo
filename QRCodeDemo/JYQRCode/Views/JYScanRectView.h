@@ -12,7 +12,4 @@
 
 @property(nonatomic,getter=isLoading)BOOL loading;
 
--(void)startScanAnim;
--(void)stopScanAnim;
-
 @end

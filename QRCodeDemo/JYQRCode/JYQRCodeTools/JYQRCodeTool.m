@@ -173,6 +173,7 @@
     }
     else{
         dispatch_async(dispatch_get_main_queue(), ^{
+
             _jyDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
             _jyInput = [AVCaptureDeviceInput deviceInputWithDevice:_jyDevice error:nil];
             
@@ -434,17 +435,21 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
 -(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
 {
     if (metadataObjects.count > 0) {
+        [_jySession stopRunning];
+        [self playScanSoundsWithName:_scanVoiceName];
+        
+        if ([_delegate respondsToSelector:@selector(jy_willGetOutputMataDataObject)]) {
+            [_delegate jy_willGetOutputMataDataObject];
+        }
+        
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [_jySession stopRunning];
-            
-            [self playScanSoundsWithName:_scanVoiceName];
-            
+            sleep(1);
             AVMetadataMachineReadableCodeObject *readableObj = metadataObjects.firstObject;
             NSString *outPutString = readableObj.stringValue;
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([_delegate respondsToSelector:@selector(jy_succeedOutputMataDataObjectToString:)]) {
-                    [_delegate jy_succeedOutputMataDataObjectToString:outPutString];
+                if ([_delegate respondsToSelector:@selector(jy_didGetOutputMataDataObjectToString:)]) {
+                    [_delegate jy_didGetOutputMataDataObjectToString:outPutString];
                 }
             });
         });

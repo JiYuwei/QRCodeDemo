@@ -11,11 +11,16 @@
 @protocol JYQRCodeDelegate <NSObject>
 
 /**
- * 成功获取扫描数据回调
+ * 扫描成功回调
+ **/
+- (void)jy_willGetOutputMataDataObject;
+
+/**
+ * 数据处理完毕回调
  *
  * @param outPutString 返回的数据
  **/
-- (void)jy_succeedOutputMataDataObjectToString:(NSString *)outPutString;
+- (void)jy_didGetOutputMataDataObjectToString:(NSString *)outPutString;
 
 @end
 

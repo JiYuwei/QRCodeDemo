@@ -171,9 +171,13 @@
 
 #pragma mark - Delegate
 
--(void)jy_succeedOutputMataDataObjectToString:(NSString *)outPutString
+-(void)jy_willGetOutputMataDataObject
 {
     self.scanActive = NO;
+}
+
+-(void)jy_didGetOutputMataDataObjectToString:(NSString *)outPutString
+{
     //对扫描获得的数据进行处理
     [self visitWebViewWithUrl:outPutString];
 }
