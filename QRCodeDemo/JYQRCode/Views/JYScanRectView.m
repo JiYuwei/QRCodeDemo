@@ -12,6 +12,8 @@
 
 @property(nonatomic,strong)UIView *scanView;
 @property(nonatomic,strong)UIView *loadingView;
+@property(nonatomic,strong)UIActivityIndicatorView *actView;
+@property(nonatomic,strong)UILabel *loadingLabel;
 
 @end
 
@@ -96,17 +98,17 @@
     _loadingView.alpha = 0.0;
     [self addSubview:_loadingView];
     
-    UIActivityIndicatorView *actView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    actView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-    [actView startAnimating];
-    [_loadingView addSubview:actView];
+    _actView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    _actView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    [_actView startAnimating];
+    [self addSubview:_actView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, self.bounds.size.height / 2 + 25, self.bounds.size.width - 40, 30)];
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont systemFontOfSize:15];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.text = @"处理中，请稍候";
-    [_loadingView addSubview:label];
+    _loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.bounds.size.height / 2 + 25, self.bounds.size.width - 40, 30)];
+    _loadingLabel.textColor = [UIColor whiteColor];
+    _loadingLabel.font = [UIFont systemFontOfSize:15];
+    _loadingLabel.textAlignment = NSTextAlignmentCenter;
+    _loadingLabel.text = @"处理中，请稍候";
+    [self addSubview:_loadingLabel];
 }
 
 #pragma mark - Override Setter & Getters
@@ -117,6 +119,9 @@
         _loading = loading;
         
         _loadingView.alpha = _loading?0.6:0.0;
+        _actView.alpha = _loading;
+        _loadingLabel.alpha = _loading;
+        
         if (!loading) {
             [self startScanAnim];
         }

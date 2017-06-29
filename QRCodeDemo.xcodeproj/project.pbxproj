@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0900AA3B1F04F79700FC4C58 /* bgcolor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0900AA391F04F79700FC4C58 /* bgcolor@2x.png */; };
 		09EEE3AC1F0107C5000152C0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3AB1F0107C5000152C0 /* main.m */; };
 		09EEE3AF1F0107C5000152C0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3AE1F0107C5000152C0 /* AppDelegate.m */; };
 		09EEE3B21F0107C5000152C0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3B11F0107C5000152C0 /* ViewController.m */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0900AA391F04F79700FC4C58 /* bgcolor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgcolor@2x.png"; sourceTree = "<group>"; };
 		09EEE3A71F0107C5000152C0 /* QRCodeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRCodeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09EEE3AB1F0107C5000152C0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		09EEE3AD1F0107C5000152C0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 		09EEE3AA1F0107C5000152C0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0900AA391F04F79700FC4C58 /* bgcolor@2x.png */,
 				09EEE3AB1F0107C5000152C0 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -296,6 +299,7 @@
 				09F1F10F1F037EA400EEFE36 /* sound.wav in Resources */,
 				09F1F1141F0384FB00EEFE36 /* logo@2x.png in Resources */,
 				09EEE3B71F0107C5000152C0 /* Assets.xcassets in Resources */,
+				0900AA3B1F04F79700FC4C58 /* bgcolor@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

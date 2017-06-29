@@ -443,7 +443,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
         }
         
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            sleep(1);
+            
             AVMetadataMachineReadableCodeObject *readableObj = metadataObjects.firstObject;
             NSString *outPutString = readableObj.stringValue;
             

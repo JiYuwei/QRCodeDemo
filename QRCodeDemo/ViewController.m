@@ -27,9 +27,17 @@
 
 @implementation ViewController
 
+- (void)loadView
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    imageView.image = [UIImage imageNamed:@"bgcolor"];
+    imageView.userInteractionEnabled = YES;
+    self.view = imageView;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1];
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgcolorbw"]];
     self.navigationItem.title = @"生成二维码";
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"扫一扫" style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
@@ -48,12 +56,14 @@
     
     _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 84, cWidth-110, 35)];
     _textField.borderStyle = UITextBorderStyleRoundedRect;
+    _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _textField.text = @"http://www.baidu.com";
     [_textField addTarget:self action:@selector(textFieldDidChangeCharacters:) forControlEvents:UIControlEventEditingChanged];
     [self.view addSubview:_textField];
     
     _transBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     _transBtn.frame = CGRectMake(_textField.frame.origin.x + _textField.frame.size.width + 10, _textField.frame.origin.y, 60, 35);
+    _transBtn.backgroundColor = [UIColor whiteColor];
     _transBtn.layer.borderColor = [UIColor grayColor].CGColor;
     _transBtn.layer.borderWidth = 0.5;
     _transBtn.layer.cornerRadius = 5;
@@ -88,7 +98,7 @@
     
     UILabel *colorLabel = [[UILabel alloc] initWithFrame:CGRectMake(originX, originY, cFWidth, cFHeight)];
     colorLabel.font = [UIFont systemFontOfSize:16];
-    colorLabel.textColor = [UIColor grayColor];
+    colorLabel.textColor = [UIColor whiteColor];
     colorLabel.text = @"颜色:";
     [self.view addSubview:colorLabel];
     
@@ -102,12 +112,12 @@
     
     UILabel *logoLabel = [[UILabel alloc] initWithFrame:CGRectMake(screenWidth - cFWidth - 70, originY, cFWidth, cFHeight)];
     logoLabel.font = [UIFont systemFontOfSize:16];
-    logoLabel.textColor = [UIColor grayColor];
+    logoLabel.textColor = [UIColor whiteColor];
     logoLabel.text = @"Logo:";
     [self.view addSubview:logoLabel];
     
     _logoSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(screenWidth - 70, originY - 1, 0, 0)];
-    _logoSwitch.tintColor = [UIColor lightGrayColor];
+    _logoSwitch.tintColor = [UIColor whiteColor];
     [_logoSwitch addTarget:self action:@selector(switchChanged) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_logoSwitch];
 }
@@ -224,15 +234,17 @@
             textField.text = @"255";
         }
         
-        [self controlBtnsEnabled:YES];
+        if (_textField.text.length > 0) {
+            [self controlBtnsEnabled:YES];
+        }
     }
 }
 
 //生成二维码
 -(void)generateQRCode
 {
-    
     [self controlBtnsEnabled:NO];
+    [self resignTextFields];
     
     UIImage *qrImage = [JYQRCodeTool jy_createQRCodeWithString:_textField.text size:_qrCodeView.bounds.size.width];
     
@@ -267,7 +279,9 @@
 
 -(void)switchChanged
 {
-    [self controlBtnsEnabled:YES];
+    if (_textField.text.length > 0) {
+        [self controlBtnsEnabled:YES];
+    }
 }
 
 
@@ -293,6 +307,11 @@
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
+    [self resignTextFields];
+}
+
+-(void)resignTextFields
+{
     for (UITextField *field in self.view.subviews) {
         if (field.isFirstResponder) {
             [field resignFirstResponder];
@@ -300,7 +319,6 @@
         }
     }
 }
-
 
 #pragma mark - MemoryWarning
 
