@@ -51,7 +51,7 @@
 
 - (void)jy_setUpCaptureWithRect:(CGRect)rect success:(void(^)())successCB
 {
-    [self setCropRect:rect];
+    [self addCropRect:rect];
     
     CGSize cSize = [UIScreen mainScreen].bounds.size;
     //计算rectOfInterest 注意x,y交换位置
@@ -148,7 +148,7 @@
 #pragma mark - Private
 
 //添加遮罩
-- (void)setCropRect:(CGRect)cropRect{
+- (void)addCropRect:(CGRect)cropRect{
     
     CAShapeLayer *cropLayer = [[CAShapeLayer alloc] init];
     CGMutablePathRef path = CGPathCreateMutable();
