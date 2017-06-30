@@ -40,7 +40,7 @@
 //    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgcolorbw"]];
     self.navigationItem.title = @"生成二维码";
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"扫一扫" style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
     
     [self createUI];
     [self createCustomUI];
