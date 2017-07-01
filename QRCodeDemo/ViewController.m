@@ -22,6 +22,8 @@
 @property(nonatomic,strong)UITextField *blueField;
 @property(nonatomic,strong)UIButton *transBtn;
 @property(nonatomic,strong)UISwitch *logoSwitch;
+@property(nonatomic,strong)UILabel  *logoCornerLB;
+@property(nonatomic,strong)UISlider *logoSlider;
 
 @end
 
@@ -100,6 +102,8 @@
     colorLabel.font = [UIFont systemFontOfSize:16];
     colorLabel.textColor = [UIColor whiteColor];
     colorLabel.text = @"颜色:";
+    colorLabel.shadowColor = [UIColor darkGrayColor];
+    colorLabel.shadowOffset = CGSizeMake(0, 1);
     [self.view addSubview:colorLabel];
     
     _redField = [[UITextField alloc] init];
@@ -114,12 +118,34 @@
     logoLabel.font = [UIFont systemFontOfSize:16];
     logoLabel.textColor = [UIColor whiteColor];
     logoLabel.text = @"Logo:";
+    logoLabel.shadowColor = [UIColor darkGrayColor];
+    logoLabel.shadowOffset = CGSizeMake(0, 1);
     [self.view addSubview:logoLabel];
     
     _logoSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(screenWidth - 70, originY - 1, 0, 0)];
     _logoSwitch.tintColor = [UIColor whiteColor];
-    [_logoSwitch addTarget:self action:@selector(switchChanged) forControlEvents:UIControlEventValueChanged];
+    [_logoSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_logoSwitch];
+    
+    _logoSlider = [[UISlider alloc] initWithFrame:CGRectMake(originX, originY + 50, screenWidth - 40, 10)];
+    _logoSlider.minimumValue = 0.0;
+    _logoSlider.maximumValue = 1.0;
+    _logoSlider.value = 0.25;
+    _logoSlider.thumbTintColor = [UIColor colorWithRed:0.37 green:0.84 blue:0.47 alpha:1];
+    _logoSlider.minimumTrackTintColor = [UIColor colorWithRed:0.37 green:0.84 blue:0.47 alpha:1];
+    [_logoSlider addTarget:self action:@selector(sliderChanged) forControlEvents:UIControlEventValueChanged];
+    _logoSlider.alpha = 0.0;
+    [self.view addSubview:_logoSlider];
+    
+    _logoCornerLB = [[UILabel alloc] initWithFrame:CGRectMake(originX, originY + 70, screenWidth - 40, 30)];
+    _logoCornerLB.font = [UIFont systemFontOfSize:16];
+    _logoCornerLB.textColor = [UIColor whiteColor];
+    _logoCornerLB.text = @"设置圆角半径比例: 0.25";
+    _logoCornerLB.textAlignment = NSTextAlignmentCenter;
+    _logoCornerLB.shadowColor = [UIColor darkGrayColor];
+    _logoCornerLB.shadowOffset = CGSizeMake(0, 1);
+    _logoCornerLB.alpha = 0.0;
+    [self.view addSubview:_logoCornerLB];
 }
 
 -(void)createColorTextField:(UITextField *)colorField rect:(CGRect)rect placeHolder:(NSString *)placeHolder
@@ -264,7 +290,7 @@
     }
     
     if (_logoSwitch.isOn) {
-        qrImage = [JYQRCodeTool jy_customQRCodeWithImage:qrImage addAvatarImage:[UIImage imageNamed:@"logo"]];
+        qrImage = [JYQRCodeTool jy_customQRCodeWithImage:qrImage addAvatarImage:[UIImage imageNamed:@"logo"] cornerRatio:_logoSlider.value];
     }
     
     _qrCodeView.image = qrImage;
@@ -277,13 +303,24 @@
     [sheet showInView:self.view];
 }
 
--(void)switchChanged
+-(void)switchChanged:(UISwitch *)sender
 {
+    _logoSlider.alpha = sender.isOn;
+    _logoCornerLB.alpha = sender.isOn;
+    
     if (_textField.text.length > 0) {
         [self controlBtnsEnabled:YES];
     }
 }
 
+-(void)sliderChanged
+{
+    if (_textField.text.length > 0) {
+        [self controlBtnsEnabled:YES];
+    }
+    
+    _logoCornerLB.text = [NSString stringWithFormat:@"设置圆角半径比例: %.2f",_logoSlider.value];
+}
 
 #pragma mark - UIActionSheetDelegate
 

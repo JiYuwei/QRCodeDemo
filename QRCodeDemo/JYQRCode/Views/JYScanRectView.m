@@ -90,7 +90,6 @@
 }
 
 //添加loading视图
-
 -(void)customLoadingView
 {
     _loadingView = [[UIView alloc] initWithFrame:self.bounds];

@@ -121,7 +121,12 @@
 
 +(UIImage *)jy_customQRCodeWithImage:(UIImage *)qrImage addAvatarImage:(UIImage *)avatarImage
 {
-    return [self imagewithQRImage:qrImage addAvatarImage:avatarImage ofTheSize:qrImage.size];
+    return [self jy_customQRCodeWithImage:qrImage addAvatarImage:avatarImage cornerRatio:0.25];
+}
+
++ (UIImage *)jy_customQRCodeWithImage:(UIImage *)qrImage addAvatarImage:(UIImage *)avatarImage cornerRatio:(CGFloat)ratio
+{
+    return [self imagewithQRImage:qrImage addAvatarImage:avatarImage ofTheSize:qrImage.size cornerRatio:ratio];
 }
 
 +(NSString *)jy_detectorQRCodeWithSourceImage:(UIImage *)sourceImage
@@ -308,7 +313,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
 }
 
 //添加logo
-+ (UIImage *)imagewithQRImage:(UIImage *)qrImage addAvatarImage:(UIImage *)avatarImage ofTheSize:(CGSize)size
++ (UIImage *)imagewithQRImage:(UIImage *)qrImage addAvatarImage:(UIImage *)avatarImage ofTheSize:(CGSize)size cornerRatio:(CGFloat)ratio
 {
     if (!avatarImage) {
         return qrImage;
@@ -322,7 +327,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     CGFloat avatarWidth = (size.width/5.0);
     CGFloat avatarHeight = avatarWidth;
     //调用一个新的切割绘图方法 crop image add cornerRadius  (裁切头像图片为圆角，并添加bored   返回一个newimage)
-    avatarImage = [self clipCornerRadius:avatarImage withSize:CGSizeMake(avatarWidth, avatarHeight)];
+    avatarImage = [self clipCornerRadius:avatarImage withSize:CGSizeMake(avatarWidth, avatarHeight) cornerRatio:ratio];
     // 设置头像的位置信息
     CGPoint position = CGPointMake(size.width/2.0, size.height/2.0);
     CGRect avatarRect = CGRectMake(position.x-(avatarWidth/2.0), position.y-(avatarHeight/2.0), avatarWidth, avatarHeight);
@@ -347,14 +352,14 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
 }
 
 //logo圆角设置
-+ (UIImage *)clipCornerRadius:(UIImage *)image withSize:(CGSize)size
++ (UIImage *)clipCornerRadius:(UIImage *)image withSize:(CGSize)size cornerRatio:(CGFloat)ratio
 {
     // 白色border的宽度
     CGFloat outerWidth = size.width/15.0;
     // 黑色border的宽度
     CGFloat innerWidth = outerWidth/10.0;
-    // 圆角这个就是我觉着的适合的一个值 ，可以自行改
-    CGFloat corenerRadius = size.width/8.0;
+    // 圆角
+    CGFloat corenerRadius = size.width/2.0 * ratio;
     // 为context创建一个区域
     CGRect areaRect = CGRectMake(0, 0, size.width, size.height);
     UIBezierPath *areaPath = [UIBezierPath bezierPathWithRoundedRect:areaRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(corenerRadius, corenerRadius)];
@@ -366,11 +371,11 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
     CGFloat innerOrigin = innerWidth/2.0 + outerOrigin/1.2;
     CGRect outerRect = CGRectInset(areaRect, outerOrigin, outerOrigin);
     CGRect innerRect = CGRectInset(outerRect, innerOrigin, innerOrigin);
-    // 要进行rect之间的计算，我想 "CGRectInset" 是一个不错的选择。
+    //  要进行rect之间的计算，我想 "CGRectInset" 是一个不错的选择。
     //  外层path
-    UIBezierPath *outerPath = [UIBezierPath bezierPathWithRoundedRect:outerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(outerRect.size.width/8.0, outerRect.size.width/8.0)];
+    UIBezierPath *outerPath = [UIBezierPath bezierPathWithRoundedRect:outerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(outerRect.size.width/2.0 * ratio, outerRect.size.width/2.0 * ratio)];
     //  内层path
-    UIBezierPath *innerPath = [UIBezierPath bezierPathWithRoundedRect:innerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(innerRect.size.width/8.0, innerRect.size.width/8.0)];
+    UIBezierPath *innerPath = [UIBezierPath bezierPathWithRoundedRect:innerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(innerRect.size.width/2.0 * ratio, innerRect.size.width/2.0 * ratio)];
     // 要保证"内外层"的吻合，那就要进行比例相等，就能达到形状的完全匹配
     // 创建上下文
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
@@ -443,7 +448,7 @@ void ProviderReleaseData (void *info, const void *data, size_t size){
         }
         
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            
+
             AVMetadataMachineReadableCodeObject *readableObj = metadataObjects.firstObject;
             NSString *outPutString = readableObj.stringValue;
             

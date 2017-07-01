@@ -117,6 +117,17 @@
 + (UIImage *)jy_customQRCodeWithImage:(UIImage *)qrImage addAvatarImage:(UIImage *)avatarImage;
 
 
+/**
+ * 给二维码添加Logo
+ *
+ * @param qrImage      二维码图片
+ * @param avatarImage  Logo图片
+ * @param ratio        Logo圆角比例（0～1）0为无圆角，1为圆形
+ *
+ * @return 二维码图片
+ **/
++ (UIImage *)jy_customQRCodeWithImage:(UIImage *)qrImage addAvatarImage:(UIImage *)avatarImage cornerRatio:(CGFloat)ratio;
+
 #pragma mark - ReadQRCode
 
 /**
