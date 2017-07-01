@@ -212,12 +212,13 @@
 
 -(void)savePhoto
 {
-    UIGraphicsBeginImageContextWithOptions(_qrBGView.bounds.size, YES, 1.0);
-    [_qrBGView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *uiImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsBeginImageContextWithOptions(_qrBGView.bounds.size, NO, 0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [_qrBGView.layer renderInContext:context];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    UIImageWriteToSavedPhotosAlbum(uiImage, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
