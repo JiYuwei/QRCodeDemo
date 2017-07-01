@@ -128,6 +128,8 @@
         [alert show];
     }
     else{
+        [self.jyQRTool jy_stopScaning];
+        
         UIImagePickerController *pickerCtr = [[UIImagePickerController alloc] init];
         pickerCtr.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         pickerCtr.delegate = self;
@@ -216,7 +218,9 @@
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        [self.jyQRTool jy_startScaning];
+    }];
 }
 
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
