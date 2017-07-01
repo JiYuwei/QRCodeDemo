@@ -15,12 +15,14 @@
 
 @interface ViewController () <UIActionSheetDelegate>
 
+@property(nonatomic,strong)UIView *qrBGView;
 @property(nonatomic,strong)UIImageView *qrCodeView;
 @property(nonatomic,strong)UITextField *textField;
 @property(nonatomic,strong)UITextField *redField;
 @property(nonatomic,strong)UITextField *greenField;
 @property(nonatomic,strong)UITextField *blueField;
 @property(nonatomic,strong)UIButton *transBtn;
+@property(nonatomic,strong)UISwitch *shadowSwitch;
 @property(nonatomic,strong)UISwitch *logoSwitch;
 @property(nonatomic,strong)UILabel  *logoCornerLB;
 @property(nonatomic,strong)UISlider *logoSlider;
@@ -39,7 +41,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bgcolorbw"]];
+//    self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.title = @"生成二维码";
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"scan"] style:UIBarButtonItemStylePlain target:self action:@selector(openQRScanVC)];
@@ -77,16 +79,23 @@
     
     CGFloat vWidth = 250;
     
-    _qrCodeView = [[UIImageView alloc] initWithFrame:CGRectMake((cWidth - vWidth) / 2, (cHeight - vWidth) / 2 + 50, vWidth, vWidth)];
-    _qrCodeView.backgroundColor = [UIColor whiteColor];
-    _qrCodeView.layer.borderColor = [UIColor grayColor].CGColor;
-    _qrCodeView.layer.borderWidth = 1.0;
-    _qrCodeView.layer.shadowColor = [UIColor darkGrayColor].CGColor;
-    _qrCodeView.layer.shadowOpacity = 1.0;
+    _qrBGView = [[UIView alloc] initWithFrame:CGRectMake((cWidth - vWidth) / 2, (cHeight - vWidth) / 2 * 1.6, vWidth, vWidth)];
+    _qrBGView.backgroundColor = [UIColor whiteColor];
+    _qrBGView.layer.borderColor = [UIColor grayColor].CGColor;
+    _qrBGView.layer.borderWidth = 1.0;
+    _qrBGView.layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    _qrBGView.layer.shadowOpacity = 1.0;
+    _qrBGView.layer.shadowOffset = CGSizeMake(0, 0);
+    [self.view addSubview:_qrBGView];
+    
+    _qrCodeView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, vWidth, vWidth)];
+    _qrCodeView.backgroundColor = [UIColor clearColor];
+    _qrCodeView.layer.shadowColor = [UIColor grayColor].CGColor;
+    _qrCodeView.layer.shadowRadius = 1.5;
     _qrCodeView.layer.shadowOffset = CGSizeMake(0, 0);
     _qrCodeView.userInteractionEnabled = YES;
     [_qrCodeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(qrCodeAction)]];
-    [self.view addSubview:_qrCodeView];
+    [_qrBGView addSubview:_qrCodeView];
 }
 
 -(void)createCustomUI
@@ -114,7 +123,20 @@
     [self createColorTextField:_greenField rect:CGRectMake(originX + colorLabel.frame.size.width + cFWidth, originY, cFWidth, cFHeight) placeHolder:@"G"];
     [self createColorTextField:_blueField rect:CGRectMake(originX + colorLabel.frame.size.width + cFWidth * 2, originY, cFWidth, cFHeight) placeHolder:@"B"];
     
-    UILabel *logoLabel = [[UILabel alloc] initWithFrame:CGRectMake(screenWidth - cFWidth - 70, originY, cFWidth, cFHeight)];
+    UILabel *shadowLabel = [[UILabel alloc] initWithFrame:CGRectMake(screenWidth - cFWidth - 70, originY, cFWidth, cFHeight)];
+    shadowLabel.font = [UIFont systemFontOfSize:16];
+    shadowLabel.textColor = [UIColor whiteColor];
+    shadowLabel.text = @"阴影:";
+    shadowLabel.shadowColor = [UIColor darkGrayColor];
+    shadowLabel.shadowOffset = CGSizeMake(0, 1);
+    [self.view addSubview:shadowLabel];
+    
+    _shadowSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(screenWidth - 70, originY - 1, 0, 0)];
+    _shadowSwitch.tintColor = [UIColor whiteColor];
+    [_shadowSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:_shadowSwitch];
+    
+    UILabel *logoLabel = [[UILabel alloc] initWithFrame:CGRectMake(screenWidth - cFWidth - 70, originY + 50, cFWidth, cFHeight)];
     logoLabel.font = [UIFont systemFontOfSize:16];
     logoLabel.textColor = [UIColor whiteColor];
     logoLabel.text = @"Logo:";
@@ -122,12 +144,12 @@
     logoLabel.shadowOffset = CGSizeMake(0, 1);
     [self.view addSubview:logoLabel];
     
-    _logoSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(screenWidth - 70, originY - 1, 0, 0)];
+    _logoSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(screenWidth - 70, originY + 49, 0, 0)];
     _logoSwitch.tintColor = [UIColor whiteColor];
     [_logoSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:_logoSwitch];
     
-    _logoSlider = [[UISlider alloc] initWithFrame:CGRectMake(originX, originY + 50, screenWidth - 40, 10)];
+    _logoSlider = [[UISlider alloc] initWithFrame:CGRectMake(originX, originY + 60, screenWidth - cFWidth - 110, 10)];
     _logoSlider.minimumValue = 0.0;
     _logoSlider.maximumValue = 1.0;
     _logoSlider.value = 0.25;
@@ -137,10 +159,10 @@
     _logoSlider.alpha = 0.0;
     [self.view addSubview:_logoSlider];
     
-    _logoCornerLB = [[UILabel alloc] initWithFrame:CGRectMake(originX, originY + 70, screenWidth - 40, 30)];
+    _logoCornerLB = [[UILabel alloc] initWithFrame:CGRectMake(originX, originY + 80, screenWidth - cFWidth - 110, 30)];
     _logoCornerLB.font = [UIFont systemFontOfSize:16];
     _logoCornerLB.textColor = [UIColor whiteColor];
-    _logoCornerLB.text = @"设置圆角半径比例: 0.25";
+    _logoCornerLB.text = @"圆角半径比例: 0.25";
     _logoCornerLB.textAlignment = NSTextAlignmentCenter;
     _logoCornerLB.shadowColor = [UIColor darkGrayColor];
     _logoCornerLB.shadowOffset = CGSizeMake(0, 1);
@@ -190,7 +212,12 @@
 
 -(void)savePhoto
 {
-    UIImageWriteToSavedPhotosAlbum(_qrCodeView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    UIGraphicsBeginImageContextWithOptions(_qrBGView.bounds.size, YES, 1.0);
+    [_qrBGView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *uiImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImageWriteToSavedPhotosAlbum(uiImage, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
 -(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
@@ -278,16 +305,12 @@
                                        [NSNumber numberWithFloat:_greenField.text.floatValue],
                                        [NSNumber numberWithFloat:_blueField.text.floatValue]];
     
-    for (NSNumber *num in colorArr) {
-        if (num.floatValue > 0) {
-            
-            BOOL isDarkBG = (colorArr[0].floatValue > 128 && colorArr[1].floatValue > 128 && colorArr[2].floatValue > 128);
-            _qrCodeView.backgroundColor = isDarkBG?[UIColor blackColor]:[UIColor whiteColor];
-            
-            qrImage = [JYQRCodeTool jy_customQRCodeWithImage:qrImage colorWithRed:colorArr[0].floatValue andGreen:colorArr[1].floatValue andBlue:colorArr[2].floatValue];
-            break;
-        }
-    }
+    BOOL isDarkBG = (colorArr[0].floatValue > 220 && colorArr[1].floatValue > 220 && colorArr[2].floatValue > 220);
+    _qrBGView.backgroundColor = isDarkBG?[UIColor blackColor]:[UIColor whiteColor];
+    _qrCodeView.layer.shadowColor = isDarkBG?[UIColor whiteColor].CGColor:[UIColor grayColor].CGColor;
+    
+    qrImage = [JYQRCodeTool jy_customQRCodeWithImage:qrImage colorWithRed:colorArr[0].floatValue andGreen:colorArr[1].floatValue andBlue:colorArr[2].floatValue];
+    
     
     if (_logoSwitch.isOn) {
         qrImage = [JYQRCodeTool jy_customQRCodeWithImage:qrImage addAvatarImage:[UIImage imageNamed:@"logo"] cornerRatio:_logoSlider.value];
@@ -305,11 +328,19 @@
 
 -(void)switchChanged:(UISwitch *)sender
 {
-    _logoSlider.alpha = sender.isOn;
-    _logoCornerLB.alpha = sender.isOn;
-    
-    if (_textField.text.length > 0) {
-        [self controlBtnsEnabled:YES];
+    if (sender == _shadowSwitch) {
+        _qrCodeView.layer.shadowOpacity = sender.isOn;
+    }
+    else if (sender == _logoSwitch){
+        _logoSlider.alpha = sender.isOn;
+        _logoCornerLB.alpha = sender.isOn;
+        
+        if (_textField.text.length > 0) {
+            [self controlBtnsEnabled:YES];
+        }
+    }
+    else{
+        return;
     }
 }
 
@@ -319,7 +350,7 @@
         [self controlBtnsEnabled:YES];
     }
     
-    _logoCornerLB.text = [NSString stringWithFormat:@"设置圆角半径比例: %.2f",_logoSlider.value];
+    _logoCornerLB.text = [NSString stringWithFormat:@"圆角半径比例: %.2f",_logoSlider.value];
 }
 
 #pragma mark - UIActionSheetDelegate
