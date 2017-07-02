@@ -185,11 +185,11 @@
 -(void)readQRCode
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:_qrCodeView.image];
+        NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:[self clipImageFromView:_qrBGView]];
         NSLog(@"%@",urlStr);
         
         if (!urlStr) {
-            UIImage *scaleImage = [JYQRCodeTool jy_getImage:_qrCodeView.image scaleToSize:CGSizeMake(200, 200)];
+            UIImage *scaleImage = [JYQRCodeTool jy_getImage:[self clipImageFromView:_qrBGView] scaleToSize:CGSizeMake(200, 200)];
             urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:scaleImage];
         }
         
@@ -210,13 +210,20 @@
 
 #pragma mark - SavePhoto
 
--(void)savePhoto
+-(UIImage *)clipImageFromView:(UIView *)view
 {
-    UIGraphicsBeginImageContextWithOptions(_qrBGView.bounds.size, NO, 0.0);
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    [_qrBGView.layer renderInContext:context];
+    [view.layer renderInContext:context];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+-(void)savePhoto
+{
+    UIImage *image = [self clipImageFromView:_qrBGView];
     
     UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
