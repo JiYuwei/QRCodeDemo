@@ -185,11 +185,14 @@
 -(void)readQRCode
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:[self clipImageFromView:_qrBGView]];
+        
+        UIImage *qrImage = [self clipImageFromView:_qrBGView];
+        
+        NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:qrImage];
         NSLog(@"%@",urlStr);
         
         if (!urlStr) {
-            UIImage *scaleImage = [JYQRCodeTool jy_getImage:[self clipImageFromView:_qrBGView] scaleToSize:CGSizeMake(200, 200)];
+            UIImage *scaleImage = [JYQRCodeTool jy_getImage:qrImage scaleToSize:CGSizeMake(200, 200)];
             urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:scaleImage];
         }
         
