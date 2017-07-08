@@ -87,6 +87,31 @@
 -(void)dealloc
 {
     [_webView removeObserver:self forKeyPath:@"estimatedProgress"];
+    [self clearCache];
+}
+
+-(void)clearCache
+{
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 9.0) {
+        
+        NSSet *websiteDataTypes = [NSSet setWithArray:@[WKWebsiteDataTypeDiskCache,WKWebsiteDataTypeMemoryCache,]];
+        
+        //// All kinds of data
+        //NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
+        
+        //// Date from
+        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+        
+        //// Execute
+        [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
+            // Done
+        }];
+    } else {
+        NSString *libraryPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *cookiesFolderPath = [libraryPath stringByAppendingString:@"/Cookies"];
+        NSError *errors;
+        [[NSFileManager defaultManager] removeItemAtPath:cookiesFolderPath error:&errors];
+    }
 }
 
 #pragma mark - MemoryWarning
