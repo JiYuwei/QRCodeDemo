@@ -316,7 +316,7 @@
                                        [NSNumber numberWithFloat:_greenField.text.floatValue],
                                        [NSNumber numberWithFloat:_blueField.text.floatValue]];
     
-    BOOL isDarkBG = (colorArr[0].floatValue > 220 && colorArr[1].floatValue > 220 && colorArr[2].floatValue > 220);
+    BOOL isDarkBG = (colorArr[1].floatValue > 200);
     _qrBGView.backgroundColor = isDarkBG?[UIColor blackColor]:[UIColor whiteColor];
     _qrCodeView.layer.shadowColor = isDarkBG?[UIColor whiteColor].CGColor:[UIColor grayColor].CGColor;
     
