@@ -58,7 +58,7 @@
     CGFloat cWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat cHeight = [UIScreen mainScreen].bounds.size.height;
     
-    _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 84, cWidth-110, 35)];
+    _textField = [[UITextField alloc] initWithFrame:CGRectMake(20, 20, cWidth-110, 35)];
     _textField.borderStyle = UITextBorderStyleRoundedRect;
     _textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _textField.text = @"http://www.baidu.com";
@@ -79,7 +79,7 @@
     
     CGFloat vWidth = 250;
     
-    _qrBGView = [[UIView alloc] initWithFrame:CGRectMake((cWidth - vWidth) / 2, (cHeight - vWidth) / 2 * 1.6, vWidth, vWidth)];
+    _qrBGView = [[UIView alloc] initWithFrame:CGRectMake((cWidth - vWidth) / 2, (cHeight - vWidth) / 2 * 1.3, vWidth, vWidth)];
     _qrBGView.backgroundColor = [UIColor whiteColor];
     _qrBGView.layer.borderColor = [UIColor grayColor].CGColor;
     _qrBGView.layer.borderWidth = 1.0;

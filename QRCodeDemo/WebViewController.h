@@ -6,9 +6,9 @@
 //  Copyright © 2017年 jyw. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface WebViewController : UIViewController
+@interface WebViewController : BaseViewController
 
 @property(nonatomic,copy) NSString *urlStr;
 

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0900AA3B1F04F79700FC4C58 /* bgcolor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0900AA391F04F79700FC4C58 /* bgcolor@2x.png */; };
+		09EBFC5F21ABDA8700E0EEA1 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EBFC5E21ABDA8700E0EEA1 /* BaseViewController.m */; };
 		09EEE3AC1F0107C5000152C0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3AB1F0107C5000152C0 /* main.m */; };
 		09EEE3AF1F0107C5000152C0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3AE1F0107C5000152C0 /* AppDelegate.m */; };
 		09EEE3B21F0107C5000152C0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09EEE3B11F0107C5000152C0 /* ViewController.m */; };
@@ -43,6 +44,8 @@
 
 /* Begin PBXFileReference section */
 		0900AA391F04F79700FC4C58 /* bgcolor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgcolor@2x.png"; sourceTree = "<group>"; };
+		09EBFC5D21ABDA8700E0EEA1 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		09EBFC5E21ABDA8700E0EEA1 /* BaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		09EEE3A71F0107C5000152C0 /* QRCodeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRCodeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		09EEE3AB1F0107C5000152C0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		09EEE3AD1F0107C5000152C0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				09EEE3DD1F010BB1000152C0 /* JYQRCode */,
 				09EEE3AD1F0107C5000152C0 /* AppDelegate.h */,
 				09EEE3AE1F0107C5000152C0 /* AppDelegate.m */,
+				09EBFC5D21ABDA8700E0EEA1 /* BaseViewController.h */,
+				09EBFC5E21ABDA8700E0EEA1 /* BaseViewController.m */,
 				09EEE3B01F0107C5000152C0 /* ViewController.h */,
 				09EEE3B11F0107C5000152C0 /* ViewController.m */,
 				09EEE3F11F028C5C000152C0 /* WebViewController.h */,
@@ -255,7 +260,7 @@
 		09EEE39F1F0107C5000152C0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = jyw;
 				TargetAttributes = {
 					09EEE3A61F0107C5000152C0 = {
@@ -333,6 +338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09EEE3B21F0107C5000152C0 /* ViewController.m in Sources */,
+				09EBFC5F21ABDA8700E0EEA1 /* BaseViewController.m in Sources */,
 				09EEE3F31F028C5C000152C0 /* WebViewController.m in Sources */,
 				09EEE3AF1F0107C5000152C0 /* AppDelegate.m in Sources */,
 				09EEE3E31F010DC0000152C0 /* JYQRScanController.m in Sources */,
@@ -384,15 +390,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -433,15 +447,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
