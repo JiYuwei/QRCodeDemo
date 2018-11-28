@@ -35,7 +35,7 @@
     
     [self.view addSubview:_webView];
     
-    UIView *progress = [[UIView alloc]initWithFrame:CGRectMake(0, 64, CGRectGetWidth(self.view.frame), 3)];
+    UIView *progress = [[UIView alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 3)];
     progress.backgroundColor = [UIColor clearColor];
     [self.view addSubview:progress];
     

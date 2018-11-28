@@ -44,6 +44,7 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
     
     if (!self.isCallBackFromPhoto) {
         self.scanActive = YES;
@@ -58,11 +59,12 @@
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.view.backgroundColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(openPhotoLibrary)];
     self.navigationItem.title = @"扫一扫";
@@ -72,7 +74,7 @@
     CGSize cSize = [UIScreen mainScreen].bounds.size;
     
     CGSize scanSize = CGSizeMake(cSize.width * 2.8/4, cSize.width * 2.8/4);
-    CGRect scanRect = CGRectMake((cSize.width - scanSize.width) / 2, (cSize.height - scanSize.height) / 2, scanSize.width, scanSize.height);
+    CGRect scanRect = CGRectMake((cSize.width - scanSize.width) / 2, (cSize.height - scanSize.height) / 3, scanSize.width, scanSize.height);
     
     [self setUpRectViewWithRect:scanRect];
     [self setUpLightButton];
