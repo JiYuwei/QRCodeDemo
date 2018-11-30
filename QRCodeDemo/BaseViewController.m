@@ -8,8 +8,6 @@
 
 #import "BaseViewController.h"
 
-#define VIEWSAFEAREAINSETS(view) ({UIEdgeInsets i; if(@available(iOS 11.0, *)) {i = view.safeAreaInsets;} else {i = UIEdgeInsetsZero;} i;})
-
 @interface BaseViewController ()
 
 @end
@@ -20,7 +18,21 @@
 {
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    [self selectWhiteNavgation:YES];
+}
+
+-(void)selectWhiteNavgation:(BOOL)isWhite
+{
+    if (isWhite) {
+        self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+        self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+        self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    }
+    else{
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
+    }
 }
 
 

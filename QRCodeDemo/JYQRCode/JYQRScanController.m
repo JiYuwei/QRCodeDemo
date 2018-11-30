@@ -42,9 +42,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.barTintColor = [UIColor blackColor];
+    [self selectWhiteNavgation:NO];
     
     if (!self.isCallBackFromPhoto) {
         self.scanActive = YES;
@@ -57,9 +55,7 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
-    self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    [self selectWhiteNavgation:YES];
 }
 
 - (void)viewDidLoad {
