@@ -184,9 +184,9 @@
 
 -(void)readQRCode
 {
+    UIImage *qrImage = [self clipImageFromView:_qrBGView];
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        
-        UIImage *qrImage = [self clipImageFromView:_qrBGView];
         
         NSString *urlStr = [JYQRCodeTool jy_detectorQRCodeWithSourceImage:qrImage];
         NSLog(@"%@",urlStr);
