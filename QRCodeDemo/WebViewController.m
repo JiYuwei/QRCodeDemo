@@ -26,6 +26,9 @@
     self.navigationItem.title = _urlStr;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(showTheURL)];
     
+    self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(backToLastVC)];
+    
     _webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
     _webView.backgroundColor = [UIColor whiteColor];
     _webView.navigationDelegate = self;

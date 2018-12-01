@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface BaseViewController : UIViewController
 
 -(void)selectWhiteNavgation:(BOOL)isWhite;
+-(void)backToLastVC;
 
 @end
 

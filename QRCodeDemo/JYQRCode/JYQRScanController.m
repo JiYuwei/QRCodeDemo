@@ -65,6 +65,9 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(openPhotoLibrary)];
     self.navigationItem.title = @"扫一扫";
     
+    self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(backToLastVC)];
+    
     _scanActive = YES;
     
     CGSize cSize = [UIScreen mainScreen].bounds.size;
